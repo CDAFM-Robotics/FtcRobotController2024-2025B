@@ -8,10 +8,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 @TeleOp (name = "First Op Mode", group = "zTesting")
+@Disabled
 
-
-
-//@Disabled
 public class FirstOpMode extends LinearOpMode {
 
   private ElapsedTime runtime = new ElapsedTime();
@@ -44,10 +42,10 @@ public class FirstOpMode extends LinearOpMode {
     telemetry.addLine("line");
     telemetry.update();
 
-    frontLeftMotor = hardwareMap.get(DcMotor.class, "FrontLeftMotor");
-    frontRightMotor = hardwareMap.get(DcMotor.class, "FrontRightMotor");
-    backLeftMotor = hardwareMap.get(DcMotor.class, "BackLeftMotor");
-    backRightMotor = hardwareMap.get(DcMotor.class, "FrontLeftMotor");
+    frontLeftMotor = hardwareMap.get(DcMotor.class, "frontLeftMotor");
+    frontRightMotor = hardwareMap.get(DcMotor.class, "frontRightMotor");
+    backLeftMotor = hardwareMap.get(DcMotor.class, "backLeftMotor");
+    backRightMotor = hardwareMap.get(DcMotor.class, "backRightMotor");
 
     telemetry.addData("Status", "Initialized");
     telemetry.update();
