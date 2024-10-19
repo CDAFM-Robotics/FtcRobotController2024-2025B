@@ -1,10 +1,11 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.teamcode.common.Robot;
-
+@TeleOp(name = "TeleOp", group = "TeleOp")
 public class DriverControlledOpMode extends LinearOpMode {
   Robot robot = new Robot(this);
 
@@ -44,6 +45,7 @@ public class DriverControlledOpMode extends LinearOpMode {
           clawPosition = robot.CLAW_GRAB_POSITION_OPEN;
         }
       }
+      telemetry.addData("claw position:", clawPosition);
       robot.clawGrabServo.setPosition(clawPosition);
 
       if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
@@ -52,10 +54,25 @@ public class DriverControlledOpMode extends LinearOpMode {
       if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
         clawRotatePosition -= 0.1;
       }
+      telemetry.addData("rotation servo:", clawRotatePosition);
+      robot.clawRotateServo.setPosition(clawRotatePosition);
+      /*if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper){
+        if(clawPosition == robot.CLAW_GRAB_POSITION_OPEN){
+          clawPosition = robot.CLAW_GRAB_POSITION_CLOSED;
+        }
+        else if(clawPosition == robot.CLAW_GRAB_POSITION_CLOSED){
+          clawPosition = robot.CLAW_GRAB_POSITION_OPEN;
+        }
+        telemetry.addData("big servo for big boys:", clawPosition);
+        robot.clawGrabServo.setPosition(clawPosition);
+
+      }
+*/
 
       // Linear Actuator Control
       robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
       robot.linearActuatorRightMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
+      telemetry.update();
     }
   }
 }
