@@ -1,15 +1,16 @@
 package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.hardware.Gamepad;
+import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.common.Robot;
 
+@TeleOp(name = "Driver Control TeleOp", group = "0competition")
 public class DriverControlledOpMode extends LinearOpMode {
   Robot robot = new Robot(this);
 
-  double clawPosition = robot.CLAW_GRAB_POSITION_OPEN;
-  double clawRotatePosition;
+  double clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
+  double clawPanPosition;
   @Override
   public void runOpMode() {
 
@@ -38,19 +39,19 @@ public class DriverControlledOpMode extends LinearOpMode {
 
       // Hand Control
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
-        if (clawPosition == robot.CLAW_GRAB_POSITION_OPEN) {
-          clawPosition = robot.CLAW_GRAB_POSITION_CLOSED;
+        if (clawOpenPosition == robot.CLAW_GRAB_POSITION_OPEN) {
+          clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
         } else {
-          clawPosition = robot.CLAW_GRAB_POSITION_OPEN;
+          clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
         }
       }
-      robot.clawGrabServo.setPosition(clawPosition);
+      robot.clawGrabServo.setPosition(clawOpenPosition);
 
       if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
-        clawRotatePosition += 0.1;
+        clawPanPosition += 0.1;
       }
       if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
-        clawRotatePosition -= 0.1;
+        clawPanPosition -= 0.1;
       }
 
       // Linear Actuator Control
