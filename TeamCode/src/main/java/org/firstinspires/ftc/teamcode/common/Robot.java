@@ -22,7 +22,7 @@ public class Robot {
   public DcMotor linearActuatorRightMotor = null;
 
   public Servo clawGrabServo = null;
-  public Servo clawRotateServo = null;
+  public Servo clawPanServo = null;
 
   LinearOpMode myOpMode;
 
@@ -30,8 +30,16 @@ public class Robot {
 
   // Constants
 
-  public double CLAW_GRAB_POSITION_CLOSED = 0.175;
-  public double CLAW_GRAB_POSITION_OPEN = 0.0;
+  public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
+  public static double CLAW_GRAB_POSITION_OPEN = 0.0;
+  public static int ARM_EXT_INIT = 0;
+  public static int ARM_EXT_DROP_TOP_BASKET = 0;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 0;
+  public static int ARM_EXT_PICKUP_SAMPLES = -10;
+  public static int ARM_ROT_INIT = 0;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1475;
+  public static int ARM_ROT_PICKUP_SAMPLES = 10;
+
 
   // Variables for Functions
 
@@ -66,7 +74,7 @@ public class Robot {
     linearActuatorRightMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorRightMotor");
 
     clawGrabServo = myOpMode.hardwareMap.get(Servo.class, "clawGrabServo");
-    clawRotateServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
+    clawPanServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
 
     frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -78,13 +86,26 @@ public class Robot {
     backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     slideRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideRotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    slideRotationMotor.setTargetPosition(ARM_ROT_INIT);
+    slideRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideRotationMotor.setPower(1);
+
+
+    slideExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+/*    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideExtensionMotor.setTargetPosition(ARM_EXT_INIT);
+    slideExtensionMotor.setPower(1);*/
 
     linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    clawRotateServo.setPosition(0);
+    clawPanServo.setPosition(0);
     clawGrabServo.setPosition(0);
   }
 
@@ -117,6 +138,18 @@ public class Robot {
 
     previousGamepad2.copy(currentGamepad2);
     currentGamepad2.copy(myOpMode.gamepad2);
+  }
+
+  // Set claw Grab Servo position
+  public void setClawGrabServoPosition(double grabPosition)
+  {
+    clawGrabServo.setPosition(grabPosition);
+  }
+
+  // Set claw Pan Servo position
+  public void setClawPanServoPosition(double panPosition)
+  {
+    clawPanServo.setPosition(panPosition);
   }
 
   // TODO: Make Trajectories in robot class or other class
