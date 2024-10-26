@@ -69,9 +69,23 @@ public class Robot {
     clawRotateServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
 
     frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    frontRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    backRightMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    clawRotateServo.setPosition(0);
+    clawGrabServo.setPosition(0);
   }
 
   public void setMotorPowers(double x, double y, double rx, double heading) {
