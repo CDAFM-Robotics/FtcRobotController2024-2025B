@@ -32,10 +32,12 @@ public class Robot {
 
   public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
+  public static double CLAW_PAN_POSITION_DROP = 0.0;
+  public static double CLAW_PAN_POSITION_PICKUP = 0.2;
   public static int ARM_EXT_INIT = 0;
-  public static int ARM_EXT_DROP_TOP_BASKET = 0;
-  public static int ARM_EXT_DROP_BOTTOM_BASKET = 0;
-  public static int ARM_EXT_PICKUP_SAMPLES = -10;
+  public static int ARM_EXT_DROP_TOP_BASKET = 500;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 250;
+  public static int ARM_EXT_PICKUP_SAMPLES = 0;
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1475;
   public static int ARM_ROT_PICKUP_SAMPLES = 10;
@@ -96,11 +98,11 @@ public class Robot {
 
     slideExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-/*    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    // slideExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     slideExtensionMotor.setTargetPosition(ARM_EXT_INIT);
-    slideExtensionMotor.setPower(1);*/
+    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideExtensionMotor.setPower(1);
 
     linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);

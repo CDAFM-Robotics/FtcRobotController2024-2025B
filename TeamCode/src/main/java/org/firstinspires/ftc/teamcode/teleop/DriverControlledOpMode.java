@@ -44,20 +44,20 @@ public class DriverControlledOpMode extends LinearOpMode {
       // Linear slide extension control
       rStickY2 = -gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y);
       telemetry.addData("Gamepad 2 right StickY", "%.5f", rStickY2);
-      robot.slideExtensionMotor.setPower(rStickY2);
-      /*if (lStickY2 < 0) {
-        //robot.slideExtensionMotor.setTargetPosition(-100);
+      //robot.slideExtensionMotor.setPower(rStickY2);
+      if (rStickY2 < 0) {
+        robot.slideExtensionMotor.setTargetPosition(-100);
         robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
-      } else if (lStickY2 > 0) {
-        //robot.slideExtensionMotor.setTargetPosition(-500);
+      } else if (rStickY2 > 0) {
+        robot.slideExtensionMotor.setTargetPosition(500);
         robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
       } else {
         //robot.slideExtensionMotor.setTargetPosition(robot.slideExtensionMotor.getCurrentPosition());
-        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
+        robot.slideExtensionMotor.setPower(1);
       }
       telemetry.addData("Extension", "Arm Motor decoder: %d", robot.slideRotationMotor.getCurrentPosition());
       telemetry.addData("Extension Arm Motor", "run mode: %s", robot.slideRotationMotor.getMode().toString());
-*/
+
       // Arm rotation
       lStickY2 = -gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y);
       telemetry.addData("Gamepad 2 Left StickY", "%.5f", lStickY2);
@@ -68,6 +68,7 @@ public class DriverControlledOpMode extends LinearOpMode {
         robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
         robot.slideRotationMotor.setPower(Math.abs(lStickY2));
       } else {
+
         //robot.slideRotationMotor.setTargetPosition(robot.slideRotationMotor.getCurrentPosition());
         robot.slideRotationMotor.setPower(1);
       }
@@ -88,14 +89,43 @@ public class DriverControlledOpMode extends LinearOpMode {
 
       if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
         clawPanPosition += 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
       if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
         clawPanPosition -= 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
       telemetry.addData("Pan Servot", "%.5f", clawPanPosition);
-      robot.setClawPanServoPosition(clawPanPosition);
 
 
+      // Macros
+      // Bottom Basket Drop
+      if (robot.currentGamepad2.y && !robot.previousGamepad2.y) {
+
+        robot.slideRotationMotor.setPower(1);
+        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
+        robot.setClawPanServoPosition(robot.CLAW_PAN_POSITION_DROP);
+        robot.slideExtensionMotor.setPower(1);
+        robot.slideExtensionMotor.setTargetPosition(robot.ARM_EXT_DROP_BOTTOM_BASKET);
+      }
+      //Top Basket Drop
+      if (robot.currentGamepad2.x && !robot.previousGamepad2.x) {
+
+        robot.slideRotationMotor.setPower(1);
+        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
+        robot.setClawPanServoPosition(robot.CLAW_PAN_POSITION_DROP);
+        robot.slideExtensionMotor.setPower(1);
+        robot.slideExtensionMotor.setTargetPosition(robot.ARM_EXT_DROP_TOP_BASKET);
+      }
+      //Pickup
+      if (robot.currentGamepad2.left_bumper && !robot.previousGamepad2.left_bumper) {
+
+        robot.slideRotationMotor.setPower(1);
+        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_PICKUP_SAMPLES);
+        robot.setClawPanServoPosition(robot.CLAW_PAN_POSITION_PICKUP);
+        robot.slideExtensionMotor.setPower(1);
+        robot.slideExtensionMotor.setTargetPosition(robot.ARM_EXT_PICKUP_SAMPLES);
+      }
       // Linear Actuator Control
       // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
       // robot.linearActuatorRightMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
