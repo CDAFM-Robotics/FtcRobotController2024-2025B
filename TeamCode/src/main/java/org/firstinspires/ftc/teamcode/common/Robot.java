@@ -32,13 +32,28 @@ public class Robot {
 
   public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
+  public static double CLAW_PAN_POSITION_DROP = 0.0;
+  public static double CLAW_PAN_POSITION_PICKUP = 0.2;
   public static int ARM_EXT_INIT = 0;
-  public static int ARM_EXT_DROP_TOP_BASKET = 0;
-  public static int ARM_EXT_DROP_BOTTOM_BASKET = 0;
-  public static int ARM_EXT_PICKUP_SAMPLES = -10;
+  public static int ARM_EXT_DROP_TOP_BASKET = 3163;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 922;
+  public static int ARM_EXT_DROP_TOP_SPECIMEN = 922;
+  public static int ARM_EXT_PICKUP_SAMPLES = 0;
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1475;
+  public static int ARM_ROT_DROP_TOP_SPECIMEN = 1475;
   public static int ARM_ROT_PICKUP_SAMPLES = 10;
+
+  public static double LENGTH_CLAW = 9;
+  public static double LENGTH_INSPECTION_FRONT = 30;
+  public static double LENGTH_INSPECTION_BACK = 10;
+  public static double LENGTH_ARM_EXTENDED = 53.54331;
+  public static double LENGTH_ARM_NORMAL = 13.375;
+
+  public static double CONVERT_DEGREES_TICKS_312RPM = 1.4936111111;
+  public static double CONVERT_TICKS_DEGREES_312RPM = 1.0/CONVERT_DEGREES_TICKS_312RPM;
+  public static double CONVERT_DEGREES_INCHES_SLIDE = 0.013177365175032795;
+  public static double CONVERT_INCHES_DEGREES_SLIDE = 1.0/CONVERT_DEGREES_INCHES_SLIDE;
 
 
   // Variables for Functions
@@ -55,6 +70,14 @@ public class Robot {
   double frontRightPower;
   double backLeftPower;
   double backRightPower;
+
+  double maxExtension;
+  int slideExtensionTargetPosition = 0;
+  int slideRotationTargetPosition = 0;
+
+  boolean prevExtending = false;
+  boolean prevRotating = false;
+
 
 
   public Robot(LinearOpMode opMode) {
@@ -97,10 +120,10 @@ public class Robot {
     slideExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     slideExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-/*    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     slideExtensionMotor.setTargetPosition(ARM_EXT_INIT);
-    slideExtensionMotor.setPower(1);*/
+    slideExtensionMotor.setPower(1);
 
     linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -150,6 +173,121 @@ public class Robot {
   public void setClawPanServoPosition(double panPosition)
   {
     clawPanServo.setPosition(panPosition);
+  }
+
+  public void setArmPosition(double armExtension, double armRotation, double extensionPower, double rotationPower) {
+    if (extensionPower > 0) {
+      slideExtensionMotor.setPower(extensionPower * 0.5);
+      slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition() - 1000;
+      prevExtending = true;
+    }
+    else if (extensionPower < 0) {
+      slideExtensionMotor.setPower(extensionPower * 0.5);
+      slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition() + 1000;
+      prevExtending = true;
+    }
+    else {
+      if (prevExtending) {
+        slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition();
+        prevExtending = false;
+      }
+      slideExtensionMotor.setPower(0.5);
+    }
+
+    checkSoftLimits(armExtension, armRotation);
+
+    if (rotationPower > 0) {
+      slideRotationMotor.setPower(rotationPower * 0.5);
+      slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
+      prevRotating = true;
+    }
+    else if (rotationPower < 0) {
+      slideRotationMotor.setPower(rotationPower * 0.5);
+      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
+      prevRotating = true;
+    }
+    else {
+      if (prevRotating) {
+        slideRotationTargetPosition = slideRotationMotor.getCurrentPosition();
+        prevRotating = false;
+      }
+      slideRotationMotor.setPower(0.5);
+    }
+
+    setMacros();
+
+    myOpMode.telemetry.addData("Arm Rotation Target Position", slideRotationTargetPosition);
+    myOpMode.telemetry.addData("Arm Extension Target Position", slideExtensionTargetPosition);
+
+    slideRotationMotor.setTargetPosition(slideRotationTargetPosition);
+    slideExtensionMotor.setTargetPosition(slideExtensionTargetPosition);
+
+  }
+
+  public void checkSoftLimits(double armExtension, double armRotation) {
+    if (armRotation <= 90) {
+      maxExtension = Math.min((LENGTH_INSPECTION_FRONT - LENGTH_CLAW) / Math.cos(Math.toRadians(armRotation)), LENGTH_ARM_EXTENDED);
+    }
+    else {
+      maxExtension = Math.min((LENGTH_INSPECTION_BACK - LENGTH_CLAW) / Math.cos(Math.toRadians(180 - armRotation)), LENGTH_ARM_EXTENDED);
+    }
+    if (armExtension + LENGTH_ARM_NORMAL > maxExtension) {
+      slideExtensionTargetPosition = convertDegreesToTicks312RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
+
+    }
+    myOpMode.telemetry.addData("Arm Rotation", armRotation);
+    myOpMode.telemetry.addData("Max Extension Soft Limit", maxExtension);
+  }
+
+  public int convertDegreesToTicks312RPM(double degrees) {
+    return (int) Math.round(degrees * CONVERT_DEGREES_TICKS_312RPM);
+  }
+
+  public double convertTicksToDegrees312RPM(int ticks) {
+    return ticks * CONVERT_TICKS_DEGREES_312RPM;
+  }
+
+  public void setMacros() {
+    // Macros
+    // Bottom Basket Drop
+    if (currentGamepad2.a && !previousGamepad2.a) {
+
+      slideRotationMotor.setPower(1);
+      slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
+      setClawPanServoPosition(CLAW_PAN_POSITION_DROP);
+      slideExtensionMotor.setPower(1);
+      slideExtensionTargetPosition = ARM_EXT_DROP_BOTTOM_BASKET;
+    }
+    //Top Basket Drop
+    if (currentGamepad2.y && !previousGamepad2.y) {
+
+      slideRotationMotor.setPower(1);
+      slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
+      setClawPanServoPosition(CLAW_PAN_POSITION_DROP);
+      slideExtensionMotor.setPower(1);
+      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
+    }
+    //Pickup
+    if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+
+      slideRotationMotor.setPower(1);
+      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
+      setClawPanServoPosition(CLAW_PAN_POSITION_PICKUP);
+      slideExtensionMotor.setPower(1);
+      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
+    }
+    // Top Specimen Bar
+    if (currentGamepad2.x && !previousGamepad2.x) {
+
+      slideRotationMotor.setPower(1);
+      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
+      setClawPanServoPosition(CLAW_PAN_POSITION_PICKUP);
+      slideExtensionMotor.setPower(1);
+      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
+    }
+    // Drive Position (key is b)
+
+    // Bottom Specimen Bar (key is start)
   }
 
   // TODO: Make Trajectories in robot class or other class
