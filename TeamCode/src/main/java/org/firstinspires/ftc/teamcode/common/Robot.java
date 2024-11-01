@@ -32,17 +32,21 @@ public class Robot {
 
   public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
-  public static double CLAW_PAN_POSITION_DROP = 0.0;
-  public static double CLAW_PAN_POSITION_PICKUP = 0.2;
+  public static double CLAW_PAN_POSITION_DROP = 0.2;
+  public static double CLAW_PAN_POSITION_PICKUP = 0.4;
+  public static double CLAW_PAN_POSITION_TOP_SPEC = 0.2;
+  public static double CLAW_PAN_POSITION_DRIVE = 0.0;
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 3163;
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 922;
-  public static int ARM_EXT_DROP_TOP_SPECIMEN = 922;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1385;
   public static int ARM_EXT_PICKUP_SAMPLES = 0;
+  public static int ARM_EXT_DRIVE = 0;
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1475;
-  public static int ARM_ROT_DROP_TOP_SPECIMEN = 1475;
+  public static int ARM_ROT_HANG_TOP_SPECIMEN = 932;
   public static int ARM_ROT_PICKUP_SAMPLES = 10;
+  public static int ARM_ROT_DRIVE = 935;
 
   public static double LENGTH_CLAW = 9;
   public static double LENGTH_INSPECTION_FRONT = 30;
@@ -129,7 +133,7 @@ public class Robot {
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     clawPanServo.setPosition(0);
-    clawGrabServo.setPosition(0);
+    clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
   }
 
   public void setMotorPowers(double x, double y, double rx, double heading) {
@@ -280,13 +284,20 @@ public class Robot {
     if (currentGamepad2.x && !previousGamepad2.x) {
 
       slideRotationMotor.setPower(1);
-      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
-      setClawPanServoPosition(CLAW_PAN_POSITION_PICKUP);
+      slideRotationTargetPosition = ARM_ROT_HANG_TOP_SPECIMEN;
+      setClawPanServoPosition(CLAW_PAN_POSITION_TOP_SPEC);
       slideExtensionMotor.setPower(1);
-      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
+      slideExtensionTargetPosition = ARM_EXT_HANG_TOP_SPECIMEN;
     }
     // Drive Position (key is b)
+    if (currentGamepad2.b && !previousGamepad2.b) {
 
+      slideRotationMotor.setPower(1);
+      slideRotationTargetPosition = ARM_ROT_DRIVE;
+      setClawPanServoPosition(CLAW_PAN_POSITION_DRIVE);
+      slideExtensionMotor.setPower(1);
+      slideExtensionTargetPosition = ARM_EXT_DRIVE;
+    }
     // Bottom Specimen Bar (key is start)
   }
 

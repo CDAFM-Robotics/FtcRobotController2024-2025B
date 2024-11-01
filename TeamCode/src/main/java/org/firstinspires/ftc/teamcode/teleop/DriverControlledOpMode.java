@@ -12,7 +12,7 @@ public class DriverControlledOpMode extends LinearOpMode {
   double lStickY2;
   double rStickY2;
 
-  double clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
+double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
   double clawPanPosition;
   @Override
   public void runOpMode() {
