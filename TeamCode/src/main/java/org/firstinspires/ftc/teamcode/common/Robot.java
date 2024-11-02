@@ -32,22 +32,23 @@ public class Robot {
 
   public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
-  public static double CLAW_PAN_POSITION_DROP = 0.2;
-  public static double CLAW_PAN_POSITION_PICKUP = 0.275;
+  public static double CLAW_PAN_POSITION_DROP = 0.57;
+  public static double CLAW_PAN_POSITION_PICKUP = 0.375;
   public static double CLAW_PAN_POSITION_TOP_SPEC = 0.2;
   public static double CLAW_PAN_POSITION_DRIVE = 0.0;
   public static int ARM_EXT_INIT = 0;
-  public static int ARM_EXT_DROP_TOP_BASKET = 7566;
-  public static int ARM_EXT_DROP_BOTTOM_BASKET = 922;
+  public static int ARM_EXT_DROP_TOP_BASKET = 8085;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 2222;
   public static int ARM_EXT_HANG_TOP_SPECIMEN = 1385;
   public static int ARM_EXT_PICKUP_SAMPLES = 250;
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1425;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 932;
-  public static int ARM_ROT_PICKUP_SAMPLES = 200;
+  public static int ARM_ROT_PICKUP_SAMPLES = 260;
+  public static int ARM_ROT_PICKUP_WALL = 661;
   public static int ARM_ROT_DRIVE = 450;
-  public static double ARM_ROT_POWER = 0.5;
+  public static double ARM_ROT_POWER = 0.1;
   public static double ARM_EXT_POWER = 0.5;
   public static double DRIVE_TRAIN_SPEED_FAST = 1;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0/3.0;
@@ -224,6 +225,12 @@ public class Robot {
 
     setMacros();
 
+    if(slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET) {
+      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
+    } else if (slideExtensionTargetPosition < 0) {
+      slideExtensionTargetPosition = 0;
+    }
+
     myOpMode.telemetry.addData("Arm Rotation Target Position", slideRotationTargetPosition);
     myOpMode.telemetry.addData("Arm Extension Target Position", slideExtensionTargetPosition);
 
@@ -300,6 +307,15 @@ public class Robot {
 
       slideRotationMotor.setPower(ARM_ROT_POWER);
       slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
+      setClawPanServoPosition(CLAW_PAN_POSITION_PICKUP);
+      slideExtensionMotor.setPower(ARM_EXT_POWER);
+      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
+    }
+    //Wall Pickup
+    if (currentGamepad2.y && !previousGamepad2.y) {
+
+      slideRotationMotor.setPower(ARM_ROT_POWER);
+      slideRotationTargetPosition = ARM_ROT_PICKUP_WALL;
       setClawPanServoPosition(CLAW_PAN_POSITION_PICKUP);
       slideExtensionMotor.setPower(ARM_EXT_POWER);
       slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
