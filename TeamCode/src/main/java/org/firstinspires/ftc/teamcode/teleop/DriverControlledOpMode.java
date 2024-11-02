@@ -12,8 +12,10 @@ public class DriverControlledOpMode extends LinearOpMode {
   double lStickY2;
   double rStickY2;
 
-double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
+  double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
   double clawPanPosition;
+  double driveSpeed = Robot.DRIVE_TRAIN_SPEED_FAST;
+
   @Override
   public void runOpMode() {
 
@@ -35,11 +37,17 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
 
 
       // Drive Train Control
-      robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0);
+
+      if (robot.currentGamepad1.left_stick_button && !robot.previousGamepad1.left_stick_button) {
+        driveSpeed = driveSpeed == Robot.DRIVE_TRAIN_SPEED_FAST ? Robot.DRIVE_TRAIN_SPEED_SLOW : Robot.DRIVE_TRAIN_SPEED_FAST;
+      }
+
+      telemetry.addData("Drive Speed", driveSpeed);
+
+      robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0, driveSpeed);
 
       // Arm Control
-
-      robot.setArmPosition(robot.convertTicksToDegrees312RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
+      robot.setArmPosition(robot.convertTicksToDegrees117RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
 
       // Hand Control
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
@@ -52,15 +60,15 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
       telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
       robot.setClawGrabServoPosition(clawOpenPosition);
 
-      if (robot.currentGamepad2.left_trigger != 0 && robot.previousGamepad2.left_trigger == 0) {
+      if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
         clawPanPosition += 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
-      if (robot.currentGamepad2.right_trigger != 0 && robot.previousGamepad2.right_trigger == 0) {
+      if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
         clawPanPosition -= 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
       telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
-      robot.setClawPanServoPosition(clawPanPosition);
-
 
       // Linear Actuator Control
       // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
