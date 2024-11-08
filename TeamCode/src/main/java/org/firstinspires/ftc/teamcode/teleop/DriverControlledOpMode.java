@@ -57,15 +57,15 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
       telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
       robot.setClawGrabServoPosition(clawOpenPosition);
 
-      if (robot.currentGamepad2.left_trigger != 0 && robot.previousGamepad2.left_trigger == 0) {
+      if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
         clawPanPosition += 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
-      if (robot.currentGamepad2.right_trigger != 0 && robot.previousGamepad2.right_trigger == 0) {
+      if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
         clawPanPosition -= 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
       telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
-      robot.setClawPanServoPosition(clawPanPosition);
-
 
       // Linear Actuator Control
       // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));

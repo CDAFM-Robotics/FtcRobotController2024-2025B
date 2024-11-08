@@ -229,12 +229,6 @@ public class Robot {
 
     setMacros();
 
-    if(slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET) {
-      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
-    } else if (slideExtensionTargetPosition < 0) {
-      slideExtensionTargetPosition = 0;
-    }
-
     myOpMode.telemetry.addData("Arm Rotation Target Position", slideRotationTargetPosition);
     myOpMode.telemetry.addData("Arm Extension Target Position", slideExtensionTargetPosition);
 
