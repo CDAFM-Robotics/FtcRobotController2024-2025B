@@ -12,7 +12,9 @@ public class DriverControlledOpMode extends LinearOpMode {
   double lStickY2;
   double rStickY2;
 
-  double clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
+  double driveSpeed = Robot.DRIVE_TRAIN_SPEED_FAST;
+
+double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
   double clawPanPosition;
   @Override
   public void runOpMode() {
@@ -35,45 +37,14 @@ public class DriverControlledOpMode extends LinearOpMode {
 
 
       // Drive Train Control
-      robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0);
-
-      /* ***************************
-               Arm Control
-      ************************** */
-
-      // Linear slide extension control
-      rStickY2 = -gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y);
-      telemetry.addData("Gamepad 2 right StickY", "%.5f", rStickY2);
-      robot.slideExtensionMotor.setPower(rStickY2);
-      /*if (lStickY2 < 0) {
-        //robot.slideExtensionMotor.setTargetPosition(-100);
-        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
-      } else if (lStickY2 > 0) {
-        //robot.slideExtensionMotor.setTargetPosition(-500);
-        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
-      } else {
-        //robot.slideExtensionMotor.setTargetPosition(robot.slideExtensionMotor.getCurrentPosition());
-        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
+      if (robot.currentGamepad1.left_stick_button && robot.previousGamepad1.left_stick_button) {
+        driveSpeed = driveSpeed == Robot.DRIVE_TRAIN_SPEED_FAST ? Robot.DRIVE_TRAIN_SPEED_SLOW : Robot.DRIVE_TRAIN_SPEED_FAST;
       }
-      telemetry.addData("Extension", "Arm Motor decoder: %d", robot.slideRotationMotor.getCurrentPosition());
-      telemetry.addData("Extension Arm Motor", "run mode: %s", robot.slideRotationMotor.getMode().toString());
-*/
-      // Arm rotation
-      lStickY2 = -gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y);
-      telemetry.addData("Gamepad 2 Left StickY", "%.5f", lStickY2);
-      if (lStickY2 < 0) {
-        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_PICKUP_SAMPLES);
-        robot.slideRotationMotor.setPower(Math.abs(lStickY2));
-      } else if (lStickY2 > 0) {
-        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
-        robot.slideRotationMotor.setPower(Math.abs(lStickY2));
-      } else {
-        //robot.slideRotationMotor.setTargetPosition(robot.slideRotationMotor.getCurrentPosition());
-        robot.slideRotationMotor.setPower(1);
-      }
-      telemetry.addData("Rotation", "Arm Motor decoder: %d", robot.slideRotationMotor.getCurrentPosition());
-      telemetry.addData("Rotation Arm Motor", "run mode: %s", robot.slideRotationMotor.getMode().toString());
+      robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0, driveSpeed);
 
+      // Arm Control
+
+      robot.setArmPosition(robot.convertTicksToDegrees117RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
 
       // Hand Control
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
@@ -83,18 +54,18 @@ public class DriverControlledOpMode extends LinearOpMode {
           clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
         }
       }
-      telemetry.addData("Grab Servot", "%.5f", clawOpenPosition);
+      telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
       robot.setClawGrabServoPosition(clawOpenPosition);
 
       if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
         clawPanPosition += 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
       if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
         clawPanPosition -= 0.025;
+        robot.setClawPanServoPosition(clawPanPosition);
       }
-      telemetry.addData("Pan Servot", "%.5f", clawPanPosition);
-      robot.setClawPanServoPosition(clawPanPosition);
-
+      telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
 
       // Linear Actuator Control
       // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));

@@ -6,7 +6,6 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.Servo;
 
 @TeleOp(name = "Zero Servo", group = "utility")
-@Disabled
 public class ZeroServoOpMode extends LinearOpMode {
   Servo clawGrabServo = null;
   @Override
