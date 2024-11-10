@@ -12,10 +12,9 @@ public class DriverControlledOpMode extends LinearOpMode {
   double lStickY2;
   double rStickY2;
 
-  double driveSpeed = Robot.DRIVE_TRAIN_SPEED_FAST;
-
-double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
+  double clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
   double clawPanPosition;
+  double clawRotatePosition;
   @Override
   public void runOpMode() {
 
@@ -37,16 +36,49 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
 
 
       // Drive Train Control
-      if (robot.currentGamepad1.left_stick_button && robot.previousGamepad1.left_stick_button) {
-        driveSpeed = driveSpeed == Robot.DRIVE_TRAIN_SPEED_FAST ? Robot.DRIVE_TRAIN_SPEED_SLOW : Robot.DRIVE_TRAIN_SPEED_FAST;
+      //robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0);
+
+      /* ***************************
+               Arm Control
+      ************************** */
+
+      // Linear slide extension control
+      rStickY2 = -gamepad2.right_stick_y * Math.abs(gamepad2.right_stick_y);
+      telemetry.addData("Gamepad 2 right StickY", "%.5f", rStickY2);
+      robot.slideExtensionMotor.setPower(rStickY2);
+      /*if (lStickY2 < 0) {
+        //robot.slideExtensionMotor.setTargetPosition(-100);
+        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
+      } else if (lStickY2 > 0) {
+        //robot.slideExtensionMotor.setTargetPosition(-500);
+        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
+      } else {
+        //robot.slideExtensionMotor.setTargetPosition(robot.slideExtensionMotor.getCurrentPosition());
+        robot.slideExtensionMotor.setPower(Math.abs(rStickY2));
       }
-      robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0, driveSpeed);
+      telemetry.addData("Extension", "Arm Motor decoder: %d", robot.slideRotationMotor.getCurrentPosition());
+      telemetry.addData("Extension Arm Motor", "run mode: %s", robot.slideRotationMotor.getMode().toString());
+*/
+      // Arm rotation
+      lStickY2 = -gamepad2.left_stick_y * Math.abs(gamepad2.left_stick_y);
+      telemetry.addData("Gamepad 2 Left StickY", "%.5f", lStickY2);
+      if (lStickY2 < 0) {
+        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_PICKUP_SAMPLES);
+        robot.slideRotationMotor.setPower(Math.abs(lStickY2));
+      } else if (lStickY2 > 0) {
+        robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
+        robot.slideRotationMotor.setPower(Math.abs(lStickY2));
+      } else {
+        //robot.slideRotationMotor.setTargetPosition(robot.slideRotationMotor.getCurrentPosition());
+        robot.slideRotationMotor.setPower(1);
+      }
+      telemetry.addData("Rotation", "Arm Motor decoder: %d", robot.slideRotationMotor.getCurrentPosition());
+      telemetry.addData("Rotation Arm Motor", "run mode: %s", robot.slideRotationMotor.getMode().toString());
 
-      // Arm Control
-
-      robot.setArmPosition(robot.convertTicksToDegrees117RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
 
       // Hand Control
+
+      //claw grab
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
         if (clawOpenPosition == robot.CLAW_GRAB_POSITION_OPEN) {
           clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
@@ -54,22 +86,33 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
           clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
         }
       }
-      telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
+      telemetry.addData("Grab Servot", "%.5f", clawOpenPosition);
       robot.setClawGrabServoPosition(clawOpenPosition);
 
-      if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
-        clawPanPosition += 0.025;
-        robot.setClawPanServoPosition(clawPanPosition);
+      //claw pan
+      if (robot.currentGamepad2.a && !robot.previousGamepad2.a && clawPanPosition < 0.25) {
+        clawPanPosition += 0.05;
       }
-      if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
-        clawPanPosition -= 0.025;
-        robot.setClawPanServoPosition(clawPanPosition);
+      if (robot.currentGamepad2.b && !robot.previousGamepad2.b && clawPanPosition > 0) {
+        clawPanPosition -= 0.05;
       }
-      telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
+      telemetry.addData("Pan Servot", "%.5f", clawPanPosition);
+      robot.setClawPanServoPosition(clawPanPosition);
+
+      //claw rotate
+      if(robot.currentGamepad2.x && !robot.previousGamepad2.x && clawRotatePosition < 0.7){
+        clawRotatePosition += 0.05;
+      }
+      if(robot.currentGamepad2.y && !robot.previousGamepad2.y && clawRotatePosition > 0){
+        clawRotatePosition -= 0.05;
+      }
+      telemetry.addData("Rotate Servo", clawRotatePosition);
+      robot.setClawRotateServoPosition(clawRotatePosition);
+
 
       // Linear Actuator Control
-      // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
-      // robot.linearActuatorRightMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
+       robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
+       robot.linearActuatorRightMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
       telemetry.update();
     }
   }
