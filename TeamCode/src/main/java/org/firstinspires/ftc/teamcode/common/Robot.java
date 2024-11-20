@@ -30,7 +30,7 @@ public class Robot {
 
   // Constants
 
-  public static double CLAW_GRAB_POSITION_CLOSED = 0.175;
+  public static double CLAW_GRAB_POSITION_CLOSED = 0.1875;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
   public static double CLAW_PAN_POSITION_DROP = 0.57;
   public static double CLAW_PAN_POSITION_PICKUP = 0.375;
@@ -46,21 +46,21 @@ public class Robot {
   public static int ARM_EXT_AUTO_HANG = 1179;
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1425;
-  public static int ARM_ROT_HANG_TOP_SPECIMEN = 932;
-  public static int ARM_ROT_PICKUP_SAMPLES = 260;
+  public static int ARM_ROT_HANG_TOP_SPECIMEN = 1032;
+  public static int ARM_ROT_PICKUP_SAMPLES = 250;
   public static int ARM_ROT_PICKUP_WALL = 661;
   public static int ARM_ROT_AUTO_HANG = 1095;
   public static int ARM_ROT_AUTO_DRIVE = 1250;
   public static int ARM_ROT_DRIVE = 450;
-  public static double ARM_ROT_POWER = 0.1;
-  public static double ARM_EXT_POWER = 0.5;
-  public static double DRIVE_TRAIN_SPEED_FAST = 1;
+  public static double ARM_ROT_POWER = 0.5;
+  public static double ARM_EXT_POWER = 1.0;
+  public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0/3.0;
 
   public static double LENGTH_CLAW = 9;
   public static double LENGTH_INSPECTION_FRONT = 30;
-  public static double LENGTH_INSPECTION_BACK = 10;
-  public static double LENGTH_ARM_EXTENDED = 53.54331;
+  public static double LENGTH_INSPECTION_BACK = 0;
+  public static double LENGTH_ARM_EXTENDED = 50;
   public static double LENGTH_ARM_NORMAL = 13.375;
 
   public static double CONVERT_DEGREES_TICKS_117RPM = 3.95861111111;
@@ -190,12 +190,12 @@ public class Robot {
 
   public void setArmPosition(double armExtension, double armRotation, double extensionPower, double rotationPower) {
     if (extensionPower > 0) {
-      slideExtensionMotor.setPower(extensionPower * 0.5);
+      slideExtensionMotor.setPower(extensionPower);
       slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition() - 1000;
       prevExtending = true;
     }
     else if (extensionPower < 0) {
-      slideExtensionMotor.setPower(extensionPower * 0.5);
+      slideExtensionMotor.setPower(extensionPower);
       slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition() + 1000;
       prevExtending = true;
     }
@@ -216,7 +216,7 @@ public class Robot {
     }
     else if (rotationPower < 0) {
       slideRotationMotor.setPower(rotationPower * 0.5);
-      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
+      slideRotationTargetPosition = -500;
       prevRotating = true;
     }
     else {
