@@ -37,9 +37,10 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
 
 
       // Drive Train Control
-      if (robot.currentGamepad1.left_stick_button && robot.previousGamepad1.left_stick_button) {
+      if (robot.currentGamepad1.left_stick_button && !robot.previousGamepad1.left_stick_button) {
         driveSpeed = driveSpeed == Robot.DRIVE_TRAIN_SPEED_FAST ? Robot.DRIVE_TRAIN_SPEED_SLOW : Robot.DRIVE_TRAIN_SPEED_FAST;
       }
+      telemetry.addData("Speed", driveSpeed);
       robot.setMotorPowers(Math.pow(gamepad1.left_stick_x, 3), Math.pow(gamepad1.left_stick_y, 3), Math.pow(gamepad1.right_stick_x, 3), 0, driveSpeed);
 
       // Arm Control
@@ -50,12 +51,19 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
         if (clawOpenPosition == robot.CLAW_GRAB_POSITION_OPEN) {
           clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
-        } else {
+        }
+        else {
           clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
         }
       }
       telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
       robot.setClawGrabServoPosition(clawOpenPosition);
+      if (clawPanPosition > 0.6) {
+        clawPanPosition = 0.6;
+      }
+      if (clawPanPosition < 0) {
+        clawPanPosition = 0;
+      }
 
       if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
         clawPanPosition += 0.025;
@@ -67,9 +75,6 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
       }
       telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
 
-      // Linear Actuator Control
-      // robot.linearActuatorLeftMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
-      // robot.linearActuatorRightMotor.setPower((gamepad1.dpad_up ? 1 : 0) - (gamepad1.dpad_down ? 1 : 0));
       telemetry.update();
     }
   }
