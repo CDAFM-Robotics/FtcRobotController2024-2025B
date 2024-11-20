@@ -6,14 +6,20 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.Robot;
 
-@Autonomous(name = "Autonomous", group = "0competition")
-public class BasicNoRRAutonomousOpMode extends LinearOpMode {
+@Autonomous(name = "Delayed Autonomous", group = "0competition")
+public class BasicNoRRDelayedAutonomousOpMode extends LinearOpMode {
   Robot robot = new Robot(this);
   ElapsedTime elapsedTime = new ElapsedTime();
   @Override
   public void runOpMode() {
     robot.initializeDevices();
     waitForStart();
+    robot.slideRotationMotor.setTargetPosition(350);
+    sleep(13000);
+    elapsedTime.reset();
+    while (opModeIsActive() && elapsedTime.milliseconds() < 500) {
+      robot.setMotorPowers(1, 0, 0, 0, 0.5);
+    }
     elapsedTime.reset();
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_DRIVE);
     while (opModeIsActive() && elapsedTime.milliseconds() < 5000) {
