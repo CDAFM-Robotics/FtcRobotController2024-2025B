@@ -23,6 +23,7 @@ public class Robot {
 
   public Servo clawGrabServo = null;
   public Servo clawPanServo = null;
+  public Servo clawRotateServo = null;
 
   LinearOpMode myOpMode;
 
@@ -30,7 +31,7 @@ public class Robot {
 
   // Constants
 
-  public static double CLAW_GRAB_POSITION_CLOSED = 0.1875;
+  public static double CLAW_GRAB_POSITION_CLOSED = 0.325;
   public static double CLAW_GRAB_POSITION_OPEN = 0.0;
   public static double CLAW_PAN_POSITION_DROP = 0.57;
   public static double CLAW_PAN_POSITION_PICKUP = 0.375;
@@ -103,7 +104,9 @@ public class Robot {
     backLeftMotor = myOpMode.hardwareMap.get(DcMotor.class, "backLeftMotor");
     backRightMotor = myOpMode.hardwareMap.get(DcMotor.class, "backRightMotor");
 
+    //slide extension
     slideExtensionMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotor");
+    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     slideRotationMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideRotationMotor");
 
     linearActuatorLeftMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorLeftMotor");
@@ -111,6 +114,7 @@ public class Robot {
 
     clawGrabServo = myOpMode.hardwareMap.get(Servo.class, "clawGrabServo");
     clawPanServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
+    clawRotateServo = myOpMode.hardwareMap.get(Servo.class, "clawSpinServo");
 
     frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
     frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -142,6 +146,7 @@ public class Robot {
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     clawPanServo.setPosition(0);
+    clawRotateServo.setPosition(0.35);
     clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
   }
 
@@ -186,6 +191,12 @@ public class Robot {
   public void setClawPanServoPosition(double panPosition)
   {
     clawPanServo.setPosition(panPosition);
+  }
+
+  //set claw rotate servo position
+  public void setClawRotateServoPosition(double RotatePosition)
+  {
+    clawRotateServo.setPosition(RotatePosition);
   }
 
   public void setArmPosition(double armExtension, double armRotation, double extensionPower, double rotationPower) {
