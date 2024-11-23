@@ -55,6 +55,7 @@ public class Robot {
   public static int ARM_ROT_DRIVE = 450;
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_EXT_POWER = 1.0;
+  public static int ARM_ROT_SLOW = 175;
   public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0/3.0;
 
@@ -343,6 +344,16 @@ public class Robot {
       slideExtensionTargetPosition = ARM_EXT_DRIVE;
     }
     // Bottom Specimen Bar (key is start)
+  }
+
+  /* Macro to slow down Arm as the Arm is going up to drop off Samples */
+  public void setFluxMacro(){
+    int x = slideRotationMotor.getCurrentPosition();
+
+    if (x > ARM_ROT_DROP_OFF_SAMPLES - ARM_ROT_SLOW) {
+      slideRotationMotor.setPower(-(1/ARM_ROT_SLOW)*(x - 1425));
+    }
+
   }
 
   // TODO: Make Trajectories in robot class or other class

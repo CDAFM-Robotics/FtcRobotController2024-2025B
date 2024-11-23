@@ -36,6 +36,21 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
 
       robot.updateGamepads();
 
+      /* Macro to slow down Arm */
+      int x = robot.ARM_ROT_DROP_OFF_SAMPLES;
+      int nx = 1/-175; //nx is equal to negative int x
+      int y = nx ;
+      //double p1 = -1/175*(x-1475);
+      robot.slideRotationMotor.setPower(1);
+      robot.slideRotationMotor.setTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
+      /*if (x <= 1300)
+        robot.slideRotationMotor.setPower(1);*/
+      /*else*/ if (x >= 1300) {
+        robot.slideRotationMotor.setPower(1/-175*((x - 1475)/2));
+      }
+      if (x == 1475)
+        robot.slideRotationMotor.setPower(1/-175*(x - 1475));
+
 
       // Drive Train Control
       if (robot.currentGamepad1.left_stick_button && !robot.previousGamepad1.left_stick_button) {
@@ -48,7 +63,7 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
 
       robot.setArmPosition(robot.convertTicksToDegrees117RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
 
-      // Hand Control
+        // Hand Control
       if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
         if (clawOpenPosition == robot.CLAW_GRAB_POSITION_OPEN) {
           clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
