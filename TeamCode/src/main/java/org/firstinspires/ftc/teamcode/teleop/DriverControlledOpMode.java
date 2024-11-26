@@ -9,14 +9,11 @@ import org.firstinspires.ftc.teamcode.common.Robot;
 public class DriverControlledOpMode extends LinearOpMode {
   Robot robot = new Robot(this);
 
-  double lStickY2;
-  double rStickY2;
-
   double driveSpeed = Robot.DRIVE_TRAIN_SPEED_FAST;
 
-double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
+  double clawOpenPosition = Robot.CLAW_GRAB_POSITION_CLOSED;
   double clawPanPosition;
-  double clawRotatePosition;
+  double clawRotatePosition = Robot.CLAW_ROTATE_POSITION_STRAIGHT;
   @Override
   public void runOpMode() {
 
@@ -49,32 +46,7 @@ double clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
       robot.setArmPosition(robot.convertTicksToDegrees117RPM(robot.slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE, robot.slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1, gamepad2.right_stick_y, gamepad2.left_stick_y);
 
       // Hand Control
-      if (robot.currentGamepad2.right_bumper && !robot.previousGamepad2.right_bumper) {
-        if (clawOpenPosition == robot.CLAW_GRAB_POSITION_OPEN) {
-          clawOpenPosition = robot.CLAW_GRAB_POSITION_CLOSED;
-        }
-        else {
-          clawOpenPosition = robot.CLAW_GRAB_POSITION_OPEN;
-        }
-      }
-      telemetry.addData("Grab Servo", "%.5f", clawOpenPosition);
-      robot.setClawGrabServoPosition(clawOpenPosition);
-      if (clawPanPosition > 0.6) {
-        clawPanPosition = 0.6;
-      }
-      if (clawPanPosition < 0) {
-        clawPanPosition = 0;
-      }
-
-      if (robot.currentGamepad2.a && !robot.previousGamepad2.a) {
-        clawPanPosition += 0.025;
-        robot.setClawPanServoPosition(clawPanPosition);
-      }
-      if (robot.currentGamepad2.b && !robot.previousGamepad2.b) {
-        clawPanPosition -= 0.025;
-        robot.setClawPanServoPosition(clawPanPosition);
-      }
-      telemetry.addData("Pan Servo", "%.5f", clawPanPosition);
+      robot.setClawPosition();
 
       telemetry.update();
     }
