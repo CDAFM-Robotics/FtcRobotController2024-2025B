@@ -41,21 +41,27 @@ public class Robot {
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.2;
   public static double CLAW_PAN_POSITION_DRIVE = 0.0;
   public static double CLAW_PAN_POSITION_AUTO_HANG = 0.275;
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.000;
+
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 8085;
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 2222;
   public static int ARM_EXT_HANG_TOP_SPECIMEN = 1300;
   public static int ARM_EXT_PICKUP_SAMPLES = 250;
   public static int ARM_EXT_DRIVE = 0;
-  public static int ARM_EXT_AUTO_HANG = 1179;
+  public static int ARM_EXT_AUTO_HANG = 1366;
+  public static int ARM_EXT_AUTO_PICKUP = 1800;
+
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1425;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1032;
   public static int ARM_ROT_PICKUP_SAMPLES = 250;
   public static int ARM_ROT_PICKUP_WALL = 282;
-  public static int ARM_ROT_AUTO_HANG = 1095;
-  public static int ARM_ROT_AUTO_DRIVE = 1250;
+  public static int ARM_ROT_AUTO_HANG = 1251;
+  public static int ARM_ROT_AUTO_DRIVE = 1123;
   public static int ARM_ROT_DRIVE = 450;
+  public static int ARM_ROT_AUTO_PICKUP = 230;
+
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_EXT_POWER = 1.0;
   public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
@@ -111,7 +117,20 @@ public class Robot {
     backLeftMotor = myOpMode.hardwareMap.get(DcMotor.class, "backLeftMotor");
     backRightMotor = myOpMode.hardwareMap.get(DcMotor.class, "backRightMotor");
 
-    //slide extension
+    frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
+    backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+
+    frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+    initializeArmDevices();
+  }
+
+  public void initializeArmDevices() {
     slideExtensionMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotor");
     slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     slideRotationMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideRotationMotor");
@@ -122,16 +141,6 @@ public class Robot {
     clawGrabServo = myOpMode.hardwareMap.get(Servo.class, "clawGrabServo");
     clawPanServo = myOpMode.hardwareMap.get(Servo.class, "clawPanServo");
     clawRotateServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
-
-    frontLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    frontRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    backLeftMotor.setDirection(DcMotorSimple.Direction.FORWARD);
-    backRightMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-
-    frontLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    frontRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    backLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    backRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     slideRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     slideRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -152,7 +161,7 @@ public class Robot {
     linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    clawPanServo.setPosition(0);
+    clawPanServo.setPosition(0.5);
     clawRotateServo.setPosition(0.35);
     clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
   }
