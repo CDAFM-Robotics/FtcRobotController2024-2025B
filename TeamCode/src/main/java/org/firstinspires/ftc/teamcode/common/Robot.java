@@ -50,10 +50,10 @@ public class Robot {
   public static int ARM_EXT_PICKUP_SAMPLES = 250;
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_EXT_AUTO_HANG = 1366;
-  public static int ARM_EXT_AUTO_PICKUP = 1800;
+  public static int ARM_EXT_AUTO_PICKUP = 1850;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1425;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1375;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1032;
   public static int ARM_ROT_PICKUP_SAMPLES = 250;
   public static int ARM_ROT_PICKUP_WALL = 282;
@@ -102,7 +102,7 @@ public class Robot {
   boolean prevRotating = false;
 
   double clawGrabPosition = CLAW_GRAB_POSITION_CLOSED;
-  double clawPanPosition = 0;
+  double clawPanPosition = CLAW_PAN_POSITION_DRIVE;
   double clawRotatePosition = CLAW_ROTATE_POSITION_STRAIGHT;
 
 
@@ -236,12 +236,12 @@ public class Robot {
 
     checkSoftLimits(armExtension, armRotation);
 
-    if (rotationPower > 0) {
+    if (rotationPower < 0) {
       slideRotationMotor.setPower(rotationPower);
       slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
       prevRotating = true;
     }
-    else if (rotationPower < 0) {
+    else if (rotationPower > 0) {
       slideRotationMotor.setPower(rotationPower);
       slideRotationTargetPosition = -500;
       prevRotating = true;

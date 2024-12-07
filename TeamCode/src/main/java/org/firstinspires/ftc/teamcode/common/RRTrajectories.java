@@ -63,7 +63,7 @@ public class RRTrajectories {
       .splineToSplineHeading(new Pose2d(35, -40, Math.PI * (1.6 / 9.0)), 0)
       .build();
 
-    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -40, Math.PI * (2.0 / 9.0)))
+    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -40, Math.PI * (3.5 / 9.0)))
       .turnTo(-Math.PI * (2.0 / 9.0))
       .build();
 
