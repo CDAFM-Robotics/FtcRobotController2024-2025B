@@ -216,6 +216,9 @@ public class Robot {
   }
 
   public void setArmPosition(double armExtension, double armRotation, double extensionPower, double rotationPower) {
+
+    checkSoftLimits(armExtension, armRotation);
+
     if (extensionPower > 0) {
       slideExtensionMotor.setPower(extensionPower);
       slideExtensionTargetPosition = 0;
@@ -223,7 +226,7 @@ public class Robot {
     }
     else if (extensionPower < 0) {
       slideExtensionMotor.setPower(extensionPower);
-      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
+      slideExtensionTargetPosition = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
       prevExtending = true;
     }
     else {
@@ -234,7 +237,7 @@ public class Robot {
       slideExtensionMotor.setPower(1);
     }
 
-    checkSoftLimits(armExtension, armRotation);
+
 
     if (rotationPower < 0) {
       slideRotationMotor.setPower(rotationPower);
@@ -285,10 +288,6 @@ public class Robot {
     }
     else {
       maxExtension = Math.min((LENGTH_INSPECTION_BACK - LENGTH_CLAW) / Math.cos(Math.toRadians(180 - armRotation)), LENGTH_ARM_EXTENDED);
-    }
-    if (armExtension + LENGTH_ARM_NORMAL > maxExtension) {
-      slideExtensionTargetPosition = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
-
     }
     myOpMode.telemetry.addData("Arm Rotation degree", armRotation);
     myOpMode.telemetry.addData("Max Extension Soft Limit", maxExtension);
