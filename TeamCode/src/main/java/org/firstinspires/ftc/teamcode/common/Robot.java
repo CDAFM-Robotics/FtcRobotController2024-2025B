@@ -132,11 +132,10 @@ public class Robot {
 
   public void initializeArmDevices() {
     slideExtensionMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotor");
-    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     slideRotationMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideRotationMotor");
 
-    linearActuatorLeftMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorLeftMotor");
-    linearActuatorRightMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorRightMotor");
+    //linearActuatorLeftMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorLeftMotor");
+    //linearActuatorRightMotor = myOpMode.hardwareMap.get(DcMotor.class, "linearActuatorRightMotor");
 
     clawGrabServo = myOpMode.hardwareMap.get(Servo.class, "clawGrabServo");
     clawPanServo = myOpMode.hardwareMap.get(Servo.class, "clawPanServo");
@@ -152,14 +151,13 @@ public class Robot {
 
     slideExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
     slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     slideExtensionMotor.setTargetPosition(ARM_EXT_INIT);
+    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
     slideExtensionMotor.setPower(1);
 
-    linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    //linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    //linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
     clawPanServo.setPosition(0.5);
     clawRotateServo.setPosition(0.35);
@@ -259,13 +257,18 @@ public class Robot {
 
     setMacros();
 
+    if (slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET)
+      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
+
     myOpMode.telemetry.addData("Arm Rotation Target Position", slideRotationTargetPosition);
     myOpMode.telemetry.addData("Arm Extension Target Position", slideExtensionTargetPosition);
+    myOpMode.telemetry.addData("Arm Rotation Position", slideRotationMotor.getCurrentPosition());
+    myOpMode.telemetry.addData("Arm Extension Position", slideExtensionMotor.getCurrentPosition());
 
     if (slideExtensionTargetPosition > slideExtensionMotor.getCurrentPosition()) {
 
       slideRotationMotor.setTargetPosition(slideRotationTargetPosition);
-      if (Math.abs(slideRotationTargetPosition - slideRotationMotor.getCurrentPosition()) < 20 ) {
+      if (Math.abs(slideRotationTargetPosition - slideRotationMotor.getCurrentPosition()) < 10 ) {
         slideExtensionMotor.setTargetPosition(slideExtensionTargetPosition);
       }
     }
@@ -382,5 +385,7 @@ public class Robot {
     setClawPanServoPosition(clawPanPosition);
     setClawRotateServoPosition(clawRotatePosition);
     myOpMode.telemetry.addData("Claw Pan Position", clawPanPosition);
+    myOpMode.telemetry.addData("Claw grab Position", clawGrabPosition);
+    myOpMode.telemetry.addData("Claw rotate Position", clawRotatePosition);
   }
 }
