@@ -33,13 +33,13 @@ public class Robot {
 
   public static double CLAW_GRAB_POSITION_CLOSED = 0.0;
   public static double CLAW_GRAB_POSITION_OPEN = 0.5;
-  public static double CLAW_ROTATE_POSITION_STRAIGHT = 0.35;
-  public static double CLAW_ROTATE_POSITION_RIGHT = 0.6875;
+  public static double CLAW_ROTATE_POSITION_STRAIGHT = 0.5;
+  public static double CLAW_ROTATE_POSITION_RIGHT = 0.8375;
   public static double CLAW_PAN_POSITION_DROP = 0.0;
-  public static double CLAW_PAN_POSITION_PICKUP = 0.05;
+  public static double CLAW_PAN_POSITION_PICKUP = 0.725;
   public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.375;
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.2;
-  public static double CLAW_PAN_POSITION_DRIVE = 0.0;
+  public static double CLAW_PAN_POSITION_DRIVE = 1;
   public static double CLAW_PAN_POSITION_AUTO_HANG = 0.275;
   public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.000;
 
@@ -62,7 +62,7 @@ public class Robot {
   public static int ARM_ROT_DRIVE = 450;
   public static int ARM_ROT_AUTO_PICKUP = 230;
 
-  public static double ARM_ROT_POWER = 0.5;
+  public static double ARM_ROT_POWER = 0.3;
   public static double ARM_EXT_POWER = 1.0;
   public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0/3.0;
@@ -159,8 +159,8 @@ public class Robot {
     //linearActuatorLeftMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     //linearActuatorRightMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-    clawPanServo.setPosition(0.5);
-    clawRotateServo.setPosition(0.35);
+    clawPanServo.setPosition(1);
+    clawRotateServo.setPosition(CLAW_ROTATE_POSITION_STRAIGHT);
     clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
   }
 
@@ -232,6 +232,7 @@ public class Robot {
         slideExtensionTargetPosition = slideExtensionMotor.getCurrentPosition();
         prevExtending = false;
       }
+      slideExtensionTargetPosition = Math.min(slideExtensionTargetPosition, convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE));
       slideExtensionMotor.setPower(1);
     }
 
@@ -257,8 +258,9 @@ public class Robot {
 
     setMacros();
 
-    if (slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET)
+    if (slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET) {
       slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
+    }
 
     myOpMode.telemetry.addData("Arm Rotation Target Position", slideRotationTargetPosition);
     myOpMode.telemetry.addData("Arm Extension Target Position", slideExtensionTargetPosition);
@@ -388,4 +390,5 @@ public class Robot {
     myOpMode.telemetry.addData("Claw grab Position", clawGrabPosition);
     myOpMode.telemetry.addData("Claw rotate Position", clawRotatePosition);
   }
+
 }
