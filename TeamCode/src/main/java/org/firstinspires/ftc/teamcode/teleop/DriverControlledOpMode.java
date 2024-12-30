@@ -9,6 +9,7 @@ import org.firstinspires.ftc.teamcode.common.Robot;
 
 @TeleOp(name = "Driver Control TeleOp", group = "0competition")
 public class DriverControlledOpMode extends LinearOpMode {
+  // Define all the states for the arm and hand
   public enum ArmHandState {
     ARM_HOLD,
     DRIVER_CONTROL,
@@ -18,27 +19,32 @@ public class DriverControlledOpMode extends LinearOpMode {
     HAND_PICKUP_SEQ_2,
     HAND_PICKUP_SEQ_3,
     ARM_DROP_TOP,
-    HAND_DROP_TOP,
-    HAND_DROP_TOP_1,
+    ARM_DROP_BOTTOM,
+    HAND_DROP,
+    HAND_DROP_1,
     ARM_HAND_DRIVE,
     ARM_TOP_SPECIMEN,
     ARM_TOP_SPECIMEN_PULL
-  };
+  }
 
+  // Current arm and hand state and previous arm state
   ArmHandState armHandState;
   ArmHandState prevArmHandState;
 
+  // Define a timer
   ElapsedTime timer = new ElapsedTime();
+  int tickPerCycle;
 
   //Create an instant of the Robot Class
   Robot robot = new Robot(this);
 
-  // Variables for Functions
+  // define the current and previous gamepads
   public Gamepad currentGamepad1 = new Gamepad();
   public Gamepad previousGamepad1 = new Gamepad();
   public Gamepad currentGamepad2 = new Gamepad();
   public Gamepad previousGamepad2 = new Gamepad();
 
+  // over ride the runOpMode function from LinearOpMode
   @Override
   public void runOpMode() {
 
@@ -46,6 +52,7 @@ public class DriverControlledOpMode extends LinearOpMode {
     // Initialize the robot
     robot.initializeDevices();
 
+    // Initialize the arm and hand state
     armHandState = ArmHandState.ARM_HOLD;
 
     telemetry.addData("Status", "Initialized");
@@ -56,8 +63,6 @@ public class DriverControlledOpMode extends LinearOpMode {
     waitForStart();
 
     while (opModeIsActive()) {
-
-      int p = 0;
 
       telemetry.addData("Status", "Running");
       // Update the gamepads.
@@ -87,10 +92,10 @@ public class DriverControlledOpMode extends LinearOpMode {
       else if (currentGamepad2.left_stick_y > 0) {
         robot.setSlideRotationMotorPower(Math.pow(currentGamepad2.left_stick_y,2));
         // Try to set the target position to avoid arm drop due to gravity
-        p = (int) (robot.ARM_EXT_DROP_TOP_BASKET / ((robot.SECONDS_DOWN_FAST / robot.CYCLE_TIME
+        tickPerCycle = (int) (robot.ARM_EXT_DROP_TOP_BASKET / ((robot.SECONDS_DOWN_FAST / robot.CYCLE_TIME
                 - robot.SECONDS_DOWN_SLOW / robot.CYCLE_TIME )
                 * currentGamepad2.left_stick_y + robot.SECONDS_DOWN_SLOW / robot.CYCLE_TIME));
-        robot.setSlideRotationMotorTargetPosition(robot.slideRotationMotor.getTargetPosition() - p);
+        robot.setSlideRotationMotorTargetPosition(robot.slideRotationMotor.getTargetPosition() - tickPerCycle);
         prevArmHandState = armHandState;
         armHandState = ArmHandState.DRIVER_CONTROL;
         telemetry.addData("left stick Rotation Motor ", "Target: %d, Current: %d", robot.getSlideRotationMotorTargetPosition(), robot.getSlideRotationMotorCurrentPosition());
@@ -144,8 +149,9 @@ public class DriverControlledOpMode extends LinearOpMode {
             timer.reset();
             break;
           case ARM_DROP_TOP:
+          case ARM_DROP_BOTTOM:
             prevArmHandState = armHandState;
-            armHandState = ArmHandState.HAND_DROP_TOP;
+            armHandState = ArmHandState.HAND_DROP;
             timer.reset();
             break;
           case ARM_TOP_SPECIMEN:
@@ -167,8 +173,18 @@ public class DriverControlledOpMode extends LinearOpMode {
       if (currentGamepad2.a && !previousGamepad2.a) {
         robot.clawPanServoDown();
       }
+      // Wrist joint rotate left
+      if (currentGamepad2.x && !previousGamepad2.x) {
+        robot.clawRotateServoLeft();
+      }
 
-      if (currentGamepad2.back && !previousGamepad2.back) {
+      // Wrist joint rotate right
+      if (currentGamepad2.y && !previousGamepad2.y) {
+        robot.clawRotateServoRight();
+      }
+
+
+      if (currentGamepad2.start && !previousGamepad2.start) {
         robot.toggleClawRotation();
       }
 
@@ -190,7 +206,9 @@ public class DriverControlledOpMode extends LinearOpMode {
       }
 
       // drop in bottom basket
-      if (currentGamepad2.start && !previousGamepad2.start) {
+      if (currentGamepad2.back && !previousGamepad2.back) {
+        prevArmHandState = armHandState;
+        armHandState = ArmHandState.ARM_DROP_BOTTOM;
         robot.dropBottomBasket();
       }
 
@@ -211,13 +229,17 @@ public class DriverControlledOpMode extends LinearOpMode {
         robot.drivePosition();
         prevArmHandState = armHandState;
         armHandState = ArmHandState.ARM_HAND_DRIVE;
-
       }
 
-      // TODO hang the robot, available after 1:30 in teleOp
       // get ready to hang the robot
+      if (currentGamepad1.y && !previousGamepad1.x) {
+        robot.getReadyToHangRobot();
+      }
 
       // hang the robot
+      if (currentGamepad1.x && !previousGamepad1.x) {
+        robot.HangRobot();
+      }
 
       /*********************************************************
        *  move the arm and hand according to target positions  *
@@ -270,12 +292,12 @@ public class DriverControlledOpMode extends LinearOpMode {
           else {
             break;
           }
-        case HAND_DROP_TOP:
+        case HAND_DROP:
           robot.openFingers();
           prevArmHandState = armHandState;
-          armHandState = ArmHandState.HAND_DROP_TOP_1;
+          armHandState = ArmHandState.HAND_DROP_1;
           break;
-        case HAND_DROP_TOP_1:
+        case HAND_DROP_1:
           if (timer.seconds() > 0.4) {
             robot.handStraight();
             prevArmHandState = armHandState;
@@ -286,6 +308,7 @@ public class DriverControlledOpMode extends LinearOpMode {
             break;
           }
         case ARM_DROP_TOP:
+        case ARM_DROP_BOTTOM:
           robot.moveArmToPosition();
           robot.moveHandToPosition();
           if(robot.armReachedTarget()) {
@@ -311,7 +334,7 @@ public class DriverControlledOpMode extends LinearOpMode {
       }
 
       telemetry.addData("Rotation Motor ", "Target: %d, Current: %d", robot.getSlideRotationMotorTargetPosition(), robot.getSlideRotationMotorCurrentPosition());
-      telemetry.addData("Rotation Motor ", "power: %f, p per cycle: %d", robot.slideRotationMotor.getPower(), p);
+      telemetry.addData("Rotation Motor ", "power: %f, p per cycle: %d", robot.slideRotationMotor.getPower(), tickPerCycle);
       telemetry.addData("Extension Motor ", "Target: %s, Current: %d", robot.getSlideExtensionMotorTargetPosition(), robot.getSlideExtensionMotorCurrentPosition());
       telemetry.addData("Extension Motor ", "power: %f", robot.slideExtensionMotor.getPower());
       telemetry.addData("Fingers servo ", "position %f", robot.clawGrabServo.getPosition());

@@ -38,28 +38,35 @@ public class Robot {
   public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.5494;
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
+  public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
   public static double CLAW_PAN_POSITION_AUTO_HANG = 0.27; // TODO
   public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.000; // TODO
   public static double CLAW_PAN_SPEED = 0.025;
+  public static double CLAW_ROTATE_SPEED = 0.025;
+  public static double CLAW_ROTATE_MAX = 0.8125;
+  public static double CLAW_ROTATE_MIN = 0.1825;
 
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 8085;
-  public static int ARM_EXT_DROP_BOTTOM_BASKET = 2222;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 2550;
   public static int ARM_EXT_HANG_TOP_SPECIMEN = 1220;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 115;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 90;
   public static int ARM_EXT_PICKUP_SAMPLES = 2293;
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_EXT_PICKUP_WALL = 0;
+  public static int ARM_EXT_HANG_ROBOT = 4950;
+  public static int ARM_EXT_HANG_ROBOT_PULL = 1652;
   public static int ARM_EXT_AUTO_HANG = 1366;
   public static int ARM_EXT_AUTO_PICKUP = 1850;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1495;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1482;
+  public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
-  public static int ARM_ROT_SWING_TOP_SPECIMEN = 750;
-  public static int ARM_ROT_PICKUP_SAMPLES = 302;
+  public static int ARM_ROT_PICKUP_SAMPLES = 295;
   public static int ARM_ROT_PICKUP_WALL = 248;
   public static int ARM_ROT_DRIVE = 497;
+  public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1251;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
   public static int ARM_ROT_AUTO_PICKUP = 230;
@@ -292,6 +299,15 @@ public class Robot {
     clawPanPosition = (clawPanServo.getPosition() - CLAW_PAN_SPEED) < 0 ? 0 : (clawPanServo.getPosition() - CLAW_PAN_SPEED);
   }
 
+  // Move claw wrist up
+  public void clawRotateServoLeft() {
+    clawRotatePosition = (clawRotateServo.getPosition() + CLAW_ROTATE_SPEED) > CLAW_ROTATE_MAX ? CLAW_ROTATE_MAX : (clawRotateServo.getPosition() + CLAW_PAN_SPEED);
+  }
+
+  // Move claw wrist down
+  public void clawRotateServoRight() {
+    clawRotatePosition = (clawRotateServo.getPosition() - CLAW_ROTATE_SPEED) < CLAW_ROTATE_MIN ? CLAW_ROTATE_MIN : (clawRotateServo.getPosition() - CLAW_PAN_SPEED);
+  }
   //set claw rotate servo position
   public void setClawRotateServoPosition(double RotatePosition) {
     clawRotateServo.setPosition(RotatePosition);
@@ -321,7 +337,7 @@ public class Robot {
   // Bottom Basket Drop
   public void dropBottomBasket() {
     slideRotationMotor.setPower(ARM_ROT_POWER);
-    slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
+    slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES_BOTTOM;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_DROP_BOTTOM_BASKET;
     clawPanPosition = CLAW_PAN_POSITION_STRAIGHT;
@@ -472,6 +488,19 @@ public class Robot {
 
   public double convertTicksToDegrees117RPM(int ticks) {
     return ticks * CONVERT_TICKS_DEGREES_117RPM;
+  }
+
+  public void getReadyToHangRobot() {
+    slideRotationMotor.setPower(ARM_ROT_POWER);
+    slideRotationTargetPosition = ARM_ROT_HANG_ROBOT;
+    slideExtensionMotor.setPower(ARM_EXT_POWER);
+    slideExtensionTargetPosition = ARM_EXT_HANG_ROBOT;
+    clawPanPosition = CLAW_PAN_POSITION_HANG_ROBOT;
+  }
+
+  public void HangRobot() {
+    slideExtensionMotor.setPower(ARM_EXT_POWER);
+    slideExtensionTargetPosition = ARM_EXT_HANG_ROBOT_PULL;
   }
 
 }
