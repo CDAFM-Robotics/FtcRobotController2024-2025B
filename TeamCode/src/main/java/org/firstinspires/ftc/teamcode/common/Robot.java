@@ -29,42 +29,47 @@ public class Robot {
   public static double CLAW_GRAB_POSITION_OPEN = 0.5;
 
   public static double CLAW_ROTATE_POSITION_STRAIGHT = 0.5;
-  public static double CLAW_ROTATE_POSITION_AUTO_PICKUP = 0.65;
   public static double CLAW_ROTATE_POSITION_RIGHT = 0.8375;
 
   public static double CLAW_PAN_TELEOP_INIT = 0.525;
-  public static double CLAW_PAN_POSITION_DROP = 0.1994;
-  public static double CLAW_PAN_POSITION_DROP_DIP = 0.05744; // don't retract slide with this position!!!
-  public static double CLAW_PAN_POSITION_PICKUP = 0.21;
-  public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.1244;
-  public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.0; // TODO
-  public static double CLAW_PAN_POSITION_AUTO_PICKUP_WALL = 0.5494;
-  public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.0; // TODO
+  public static double CLAW_PAN_POSITION_DROP_DIP = 0.6; // don't retract slide with this position!!!
+  public static double CLAW_PAN_POSITION_STRAIGHT = 0.21;
+  public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.11;          ;
+  public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.5494;
+  public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
-  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.525;
-  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.15;
+  public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
+  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.27; // TODO
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.000; // TODO
   public static double CLAW_PAN_SPEED = 0.025;
+  public static double CLAW_ROTATE_SPEED = 0.025;
+  public static double CLAW_ROTATE_MAX = 0.8125;
+  public static double CLAW_ROTATE_MIN = 0.1825;
 
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 8085;
-  public static int ARM_EXT_DROP_BOTTOM_BASKET = 2222;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1300;
+  public static int ARM_EXT_DROP_BOTTOM_BASKET = 2550;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1220;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 90;
   public static int ARM_EXT_PICKUP_SAMPLES = 2293;
   public static int ARM_EXT_DRIVE = 0;
+  public static int ARM_EXT_PICKUP_WALL = 0;
+  public static int ARM_EXT_HANG_ROBOT = 4950;
+  public static int ARM_EXT_HANG_ROBOT_PULL = 1652;
   public static int ARM_EXT_AUTO_HANG = 1366;
-  public static int ARM_EXT_AUTO_PICKUP = 2000;
-  public static int ARM_EXT_AUTO_DROP_OBSERVE = 4600;
+  public static int ARM_EXT_AUTO_PICKUP = 1850;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1495;
-  public static int ARM_ROT_HANG_TOP_SPECIMEN = 1032;
-  public static int ARM_ROT_PICKUP_SAMPLES = 355;
-  public static int ARM_ROT_PICKUP_WALL = 282;
-  public static int ARM_ROT_AUTO_PICKUP_WALL = 248;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1482;
+  public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
+  public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
+  public static int ARM_ROT_PICKUP_SAMPLES = 295;
+  public static int ARM_ROT_PICKUP_WALL = 248;
+  public static int ARM_ROT_DRIVE = 497;
+  public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1251;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
-  public static int ARM_ROT_DRIVE = 497;
-  public static int ARM_ROT_AUTO_PICKUP = 264;
+  public static int ARM_ROT_AUTO_PICKUP = 230;
 
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_ROT_POWER_FULL = 1.0;
@@ -103,8 +108,8 @@ public class Robot {
   double maxExtension;
 
   // arm target position
-  int slideRotationTargetPosition = 0;
-  int slideExtensionTargetPosition = 0;
+  int slideRotationTargetPosition = ARM_ROT_DRIVE;
+  int slideExtensionTargetPosition = ARM_EXT_INIT;
 
   // Hand position
   double clawGrabPosition = CLAW_GRAB_POSITION_CLOSED;
@@ -254,7 +259,7 @@ public class Robot {
 
   public void setSlideExtMotorTargetPosWithLimit(int position) {
     checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
-            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
+            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1);
 
     slideExtensionTargetPosition = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
   }
@@ -282,7 +287,6 @@ public class Robot {
   // Set claw Pan Servo position
   public void setClawPanServoPosition(double panPosition) {
     clawPanPosition = panPosition;
-    clawPanServo.setPosition(panPosition);
   }
 
   // Move claw wrist up
@@ -295,6 +299,15 @@ public class Robot {
     clawPanPosition = (clawPanServo.getPosition() - CLAW_PAN_SPEED) < 0 ? 0 : (clawPanServo.getPosition() - CLAW_PAN_SPEED);
   }
 
+  // Move claw wrist up
+  public void clawRotateServoLeft() {
+    clawRotatePosition = (clawRotateServo.getPosition() + CLAW_ROTATE_SPEED) > CLAW_ROTATE_MAX ? CLAW_ROTATE_MAX : (clawRotateServo.getPosition() + CLAW_PAN_SPEED);
+  }
+
+  // Move claw wrist down
+  public void clawRotateServoRight() {
+    clawRotatePosition = (clawRotateServo.getPosition() - CLAW_ROTATE_SPEED) < CLAW_ROTATE_MIN ? CLAW_ROTATE_MIN : (clawRotateServo.getPosition() - CLAW_PAN_SPEED);
+  }
   //set claw rotate servo position
   public void setClawRotateServoPosition(double RotatePosition) {
     clawRotateServo.setPosition(RotatePosition);
@@ -309,7 +322,7 @@ public class Robot {
     slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
-    clawPanPosition = CLAW_PAN_POSITION_PICKUP;
+    clawPanPosition = CLAW_PAN_POSITION_STRAIGHT;
     clawGrabPosition = CLAW_GRAB_POSITION_OPEN;
   }
 
@@ -318,16 +331,16 @@ public class Robot {
     slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
-    clawPanPosition = CLAW_PAN_POSITION_DROP;
+    clawPanPosition = CLAW_PAN_POSITION_STRAIGHT;
   }
 
   // Bottom Basket Drop
   public void dropBottomBasket() {
     slideRotationMotor.setPower(ARM_ROT_POWER);
-    slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
+    slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES_BOTTOM;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_DROP_BOTTOM_BASKET;
-    clawPanPosition = CLAW_PAN_POSITION_DROP;
+    clawPanPosition = CLAW_PAN_POSITION_STRAIGHT;
   }
 
   //Wall Pickup
@@ -335,7 +348,7 @@ public class Robot {
     slideRotationMotor.setPower(ARM_ROT_POWER);
     slideRotationTargetPosition = ARM_ROT_PICKUP_WALL;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
-    slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
+    slideExtensionTargetPosition = ARM_EXT_PICKUP_WALL;
     clawPanPosition = CLAW_PAN_POSITION_PICKUP_WALL;
   }
 
@@ -346,6 +359,12 @@ public class Robot {
     clawPanPosition = CLAW_PAN_POSITION_TOP_SPECIMEN;
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_HANG_TOP_SPECIMEN;
+  }
+
+  public void pullExtToHangSpecimen() {
+    slideExtensionMotor.setPower(ARM_EXT_POWER);
+    slideExtensionTargetPosition = ARM_EXT_HANG_TOP_SPECIMEN_PULL;
+
   }
 
   // Bottom Specimen Bar TODO
@@ -370,7 +389,7 @@ public class Robot {
 
   }
 
-  public void moveArmToPosition() {
+  public void checkExtentionLimit () {
     // check limit
     checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
             slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1);
@@ -379,14 +398,19 @@ public class Robot {
     if (slideExtensionMotor.getCurrentPosition() > max) {
       slideExtensionTargetPosition = max;
     }
-
     if (slideExtensionTargetPosition > ARM_EXT_DROP_TOP_BASKET)
       slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
-    myOpMode.telemetry.addData("3 Rotation Motor ", "Target: %d, Current: %d", getSlideRotationMotorTargetPosition(), getSlideRotationMotorCurrentPosition());
+    else if (slideExtensionTargetPosition < ARM_EXT_INIT)
+      slideExtensionTargetPosition = ARM_EXT_INIT;
 
+  }
+  public void moveArmToPosition() {
+    myOpMode.telemetry.addData("slideRotationTargetPosition", "start %d", slideRotationTargetPosition);
+    myOpMode.telemetry.addData("slideExtensionTargetPosition", "start %d", slideExtensionTargetPosition);
     if (slideExtensionTargetPosition > slideExtensionMotor.getCurrentPosition()) {
       slideRotationMotor.setTargetPosition(slideRotationTargetPosition);
       if (Math.abs(slideRotationTargetPosition - slideRotationMotor.getCurrentPosition()) < 10) {
+        checkExtentionLimit();
         slideExtensionMotor.setTargetPosition(slideExtensionTargetPosition);
       }
     } else if (slideExtensionTargetPosition < slideExtensionMotor.getCurrentPosition()) {
@@ -396,14 +420,55 @@ public class Robot {
       }
     } else {
       slideRotationMotor.setTargetPosition(slideRotationTargetPosition);
+      checkExtentionLimit();
       slideExtensionMotor.setTargetPosition(slideExtensionTargetPosition);
     }
+    myOpMode.telemetry.addData("slideRotationTargetPosition", "end %d", slideRotationTargetPosition);
+    myOpMode.telemetry.addData("slideExtensionTargetPosition", "end %d", slideExtensionTargetPosition);
   }
 
+  public boolean armReachedTarget() {
+    if (Math.abs(slideExtensionTargetPosition - slideExtensionMotor.getCurrentPosition()) < 10
+            && Math.abs(slideRotationTargetPosition - slideRotationMotor.getCurrentPosition()) < 10)
+      return true;
+    else
+      return false;
+  }
+  public void moveArmToDropTop() {
+    moveArmToPosition();
+
+  }
   public void moveHandToPosition() {
     clawGrabServo.setPosition(clawGrabPosition);
     clawPanServo.setPosition(clawPanPosition);
     clawRotateServo.setPosition(clawRotatePosition);
+  }
+
+  public void handPickUpdip() {
+    clawPanPosition = CLAW_PAN_POSITION_PICKUP_DIP;
+    clawPanServo.setPosition(clawPanPosition);
+  }
+
+  public boolean isFingersOpen() {
+    return (clawGrabServo.getPosition() == CLAW_GRAB_POSITION_OPEN);
+  }
+  public void closeFingers() {
+    clawGrabPosition = CLAW_GRAB_POSITION_CLOSED;
+    clawGrabServo.setPosition(clawGrabPosition);
+  }
+  public void openFingers() {
+    clawGrabPosition = CLAW_GRAB_POSITION_OPEN;
+    clawGrabServo.setPosition(clawGrabPosition);
+  }
+  public void handStraight() {
+    clawPanPosition = CLAW_PAN_POSITION_STRAIGHT;
+    clawPanServo.setPosition(clawPanPosition);
+  }
+
+  public void handDropTopDip () {
+    clawPanPosition = CLAW_PAN_POSITION_DROP_DIP;
+    clawPanServo.setPosition(clawPanPosition);
+
   }
 
   // check the soft limit for the arm to stay within the 42" length requirement
@@ -425,62 +490,18 @@ public class Robot {
     return ticks * CONVERT_TICKS_DEGREES_117RPM;
   }
 
-/*  public void setMacros() {
-    // Macros
-    // Bottom Basket Drop
-    if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
+  public void getReadyToHangRobot() {
+    slideRotationMotor.setPower(ARM_ROT_POWER);
+    slideRotationTargetPosition = ARM_ROT_HANG_ROBOT;
+    slideExtensionMotor.setPower(ARM_EXT_POWER);
+    slideExtensionTargetPosition = ARM_EXT_HANG_ROBOT;
+    clawPanPosition = CLAW_PAN_POSITION_HANG_ROBOT;
+  }
 
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
-      clawPanPosition = CLAW_PAN_POSITION_DROP;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_DROP_BOTTOM_BASKET;
-    }
-    //Top Basket Drop
-    if (currentGamepad2.dpad_up && !previousGamepad2.dpad_up) {
-
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_DROP_OFF_SAMPLES;
-      clawPanPosition = CLAW_PAN_POSITION_DROP;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_DROP_TOP_BASKET;
-    }
-    //Pickup
-    if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
-
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_PICKUP_SAMPLES;
-      clawPanPosition = CLAW_PAN_POSITION_PICKUP;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
-    }
-    //Wall Pickup
-    if (currentGamepad2.y && !previousGamepad2.y) {
-
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_PICKUP_WALL;
-      clawPanPosition = CLAW_PAN_POSITION_PICKUP_WALL;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_PICKUP_SAMPLES;
-    }
-    // Top Specimen Bar
-    if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
-
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_HANG_TOP_SPECIMEN;
-      clawPanPosition = CLAW_PAN_POSITION_TOP_SPECIMEN;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_HANG_TOP_SPECIMEN;
-    }
-    // Drive Position
-    if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left) {
-
-      slideRotationMotor.setPower(ARM_ROT_POWER);
-      slideRotationTargetPosition = ARM_ROT_DRIVE;
-      clawPanPosition = CLAW_PAN_POSITION_DRIVE;
-      slideExtensionMotor.setPower(ARM_EXT_POWER);
-      slideExtensionTargetPosition = ARM_EXT_DRIVE;
-    }
-  }*/
+  public void HangRobot() {
+    slideExtensionMotor.setPower(ARM_EXT_POWER);
+    slideExtensionTargetPosition = ARM_EXT_HANG_ROBOT_PULL;
+  }
 
 }
+
