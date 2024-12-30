@@ -60,14 +60,14 @@ public class RRTrajectories {
 
     barToFirstAllySample = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
       .setTangent(-Math.PI / 2)
-      .splineToSplineHeading(new Pose2d(35, -40, Math.PI * (1.6 / 9.0)), 0)
+      .splineToSplineHeading(new Pose2d(35, -41, Math.PI * (1.6 / 9.0)), 0)
       .build();
 
-    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -40, Math.PI * (3.5 / 9.0)))
-      .turnTo(-Math.PI * (2.0 / 9.0))
+    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -41, Math.PI * (1.6 / 9.0)))
+      .turnTo(-Math.PI * (3.0 / 9.0))
       .build();
-
-    observationZoneToSecondAllySample = drive.actionBuilder(new Pose2d(35, -40, -Math.PI * (2.0 / 9.0)))
+/*
+    observationZoneToSecondAllySample = drive.actionBuilder(new Pose2d(35, -39, -Math.PI * (2.0 / 9.0)))
       .strafeToSplineHeading(new Vector2d(45, -40),Math.PI * (2.0 / 9.0))
       .build();
 
@@ -82,15 +82,17 @@ public class RRTrajectories {
     thirdAllySampleToObservationZone = drive.actionBuilder(new Pose2d(55, -40, Math.PI * (2.0 / 9.0)))
       .turnTo(-Math.PI * (2.0 / 9.0))
       .build();
+      */
 
-    observationZoneToSpecimenWallPos = drive.actionBuilder(new Pose2d(55, -40, -Math.PI * (2.0 / 9.0)))
-        .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
+    observationZoneToSpecimenWallPos = drive.actionBuilder(new Pose2d(35, -41, -Math.PI * (3.0 / 9.0)))
+        .strafeToSplineHeading(new Vector2d(48, -50), -Math.PI / 2)
+        .strafeTo(new Vector2d(48, -60))
         .build();
 
-    specimenWallPosToBar = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
+    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -60, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(4, -31), Math.PI / 2)
       .build();
-
+/*
     barToSpecimenWallPos = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
       .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
       .build();
@@ -107,8 +109,10 @@ public class RRTrajectories {
       .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
       .build();
 
-    barToParkCorner = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
-        .strafeTo(new Vector2d(64.5, -65))
+ */
+
+    barToParkCorner = drive.actionBuilder(new Pose2d(4, -31, Math.PI / 2))
+        .strafeTo(new Vector2d(62, -66))
         .build();
 
     rightSideTrajectories = new Action[] {rightStartToBar, barToFirstAllySample, firstAllySampleToObservationZone, observationZoneToSecondAllySample, secondAllySampleToObservationZone, observationZoneToThirdAllySample, thirdAllySampleToObservationZone, observationZoneToSpecimenWallPos, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToParkCorner};
