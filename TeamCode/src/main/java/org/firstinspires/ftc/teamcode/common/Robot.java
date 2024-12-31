@@ -63,7 +63,7 @@ public class Robot {
   public static int ARM_EXT_AUTO_DROP_OBSERVE = 4600;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1482;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1478;
   public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
   public static int ARM_ROT_PICKUP_SAMPLES = 295;

@@ -24,7 +24,8 @@ public class DriverControlledOpMode extends LinearOpMode {
     HAND_DROP_1,
     ARM_HAND_DRIVE,
     ARM_TOP_SPECIMEN,
-    ARM_TOP_SPECIMEN_PULL
+    ARM_TOP_SPECIMEN_PULL,
+    ARM_DROP_READY
   }
 
   // Current arm and hand state and previous arm state
@@ -148,8 +149,7 @@ public class DriverControlledOpMode extends LinearOpMode {
             // reset the timer
             timer.reset();
             break;
-          case ARM_DROP_TOP:
-          case ARM_DROP_BOTTOM:
+          case ARM_DROP_READY:
             prevArmHandState = armHandState;
             armHandState = ArmHandState.HAND_DROP;
             timer.reset();
@@ -313,6 +313,8 @@ public class DriverControlledOpMode extends LinearOpMode {
           robot.moveHandToPosition();
           if(robot.armReachedTarget()) {
             robot.handDropTopDip();
+            prevArmHandState = armHandState;
+            armHandState = ArmHandState.ARM_DROP_READY;
             break;
           }
           else
