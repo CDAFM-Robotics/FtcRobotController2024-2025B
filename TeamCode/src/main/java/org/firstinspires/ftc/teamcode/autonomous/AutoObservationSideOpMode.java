@@ -115,6 +115,8 @@ public class AutoObservationSideOpMode extends LinearOpMode {
 
     sleep(1000);
 
+    robot.slideRotationMotor.setTargetPosition(1200);
+
     Actions.runBlocking(trajectories[13]);
 
     robot.slideRotationMotor.setPower(0.5);
