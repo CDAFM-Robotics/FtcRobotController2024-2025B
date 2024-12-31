@@ -37,6 +37,7 @@ public class Robot {
   public static double CLAW_PAN_POSITION_STRAIGHT = 0.21;
   public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.11;          ;
   public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.5494;
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP_WALL = 0.5494;
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
   public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
@@ -67,6 +68,7 @@ public class Robot {
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
   public static int ARM_ROT_PICKUP_SAMPLES = 295;
   public static int ARM_ROT_PICKUP_WALL = 248;
+  public static int ARM_ROT_AUTO_PICKUP_WALL = 248;
   public static int ARM_ROT_DRIVE = 497;
   public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1251;
@@ -288,11 +290,6 @@ public class Robot {
 
   // Set claw Pan Servo position
   public void setClawPanServoPosition(double panPosition) {
-    clawPanPosition = panPosition;
-    clawPanServo.setPosition(panPosition);
-  }
-
-  public void setClawPanServoPositionNoMove(double panPosition) {
     clawPanPosition = panPosition;
     clawPanServo.setPosition(panPosition);
   }
