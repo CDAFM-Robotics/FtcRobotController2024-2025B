@@ -29,6 +29,7 @@ public class Robot {
   public static double CLAW_GRAB_POSITION_OPEN = 0.5;
 
   public static double CLAW_ROTATE_POSITION_STRAIGHT = 0.5;
+  public static double CLAW_ROTATE_POSITION_AUTO_PICKUP = 0.65;
   public static double CLAW_ROTATE_POSITION_RIGHT = 0.8375;
 
   public static double CLAW_PAN_TELEOP_INIT = 0.525;
@@ -39,8 +40,8 @@ public class Robot {
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
   public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
-  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.27; // TODO
-  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.000; // TODO
+  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.525;
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.15;
   public static double CLAW_PAN_SPEED = 0.025;
   public static double CLAW_ROTATE_SPEED = 0.025;
   public static double CLAW_ROTATE_MAX = 0.8125;
@@ -57,7 +58,8 @@ public class Robot {
   public static int ARM_EXT_HANG_ROBOT = 4950;
   public static int ARM_EXT_HANG_ROBOT_PULL = 1652;
   public static int ARM_EXT_AUTO_HANG = 1366;
-  public static int ARM_EXT_AUTO_PICKUP = 1850;
+  public static int ARM_EXT_AUTO_PICKUP = 2000;
+  public static int ARM_EXT_AUTO_DROP_OBSERVE = 4600;
 
   public static int ARM_ROT_INIT = 0;
   public static int ARM_ROT_DROP_OFF_SAMPLES = 1482;
@@ -69,7 +71,7 @@ public class Robot {
   public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1251;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
-  public static int ARM_ROT_AUTO_PICKUP = 230;
+  public static int ARM_ROT_AUTO_PICKUP = 264;
 
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_ROT_POWER_FULL = 1.0;
@@ -259,7 +261,7 @@ public class Robot {
 
   public void setSlideExtMotorTargetPosWithLimit(int position) {
     checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
-            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1);
+            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
 
     slideExtensionTargetPosition = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
   }
@@ -287,6 +289,12 @@ public class Robot {
   // Set claw Pan Servo position
   public void setClawPanServoPosition(double panPosition) {
     clawPanPosition = panPosition;
+    clawPanServo.setPosition(panPosition);
+  }
+
+  public void setClawPanServoPositionNoMove(double panPosition) {
+    clawPanPosition = panPosition;
+    clawPanServo.setPosition(panPosition);
   }
 
   // Move claw wrist up
@@ -392,7 +400,7 @@ public class Robot {
   public void checkExtentionLimit () {
     // check limit
     checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
-            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 25.1);
+            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
     // check to see if the
     int max = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
     if (slideExtensionMotor.getCurrentPosition() > max) {
