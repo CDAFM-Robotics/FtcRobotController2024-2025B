@@ -51,8 +51,8 @@ public class Robot {
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 8085;
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 2550;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1220;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 90;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1250;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 140;
   public static int ARM_EXT_PICKUP_SAMPLES = 2293;
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_EXT_PICKUP_WALL = 0;
@@ -508,5 +508,22 @@ public class Robot {
     slideExtensionTargetPosition = ARM_EXT_HANG_ROBOT_PULL;
   }
 
+  public boolean isArmPickup() {
+    return (Math.abs(slideRotationMotor.getCurrentPosition() - ARM_ROT_PICKUP_SAMPLES) < 100) &&
+            (Math.abs(slideExtensionMotor.getCurrentPosition() - ARM_EXT_PICKUP_SAMPLES) < 500) &&
+            (Math.abs(clawPanServo.getPosition() - CLAW_PAN_POSITION_STRAIGHT) <= 0.1);
+  }
+
+  public boolean isArmTopDropReady() {
+    return (Math.abs(slideRotationMotor.getCurrentPosition() - ARM_ROT_DROP_OFF_SAMPLES) < 100) &&
+            (Math.abs(slideExtensionMotor.getCurrentPosition() - ARM_EXT_DROP_TOP_BASKET) < 500) &&
+            (Math.abs(clawPanServo.getPosition() - CLAW_PAN_POSITION_DROP_DIP) <= 0.1);
+  }
+
+  public boolean isArmBottomDropReady() {
+    return (Math.abs(slideRotationMotor.getCurrentPosition() - ARM_ROT_DROP_OFF_SAMPLES_BOTTOM) < 100) &&
+            (Math.abs(slideExtensionMotor.getCurrentPosition() - ARM_EXT_DROP_BOTTOM_BASKET) < 500) &&
+            (Math.abs(clawPanServo.getPosition() - CLAW_PAN_POSITION_DROP_DIP) <= 0.1);
+  }
 }
 

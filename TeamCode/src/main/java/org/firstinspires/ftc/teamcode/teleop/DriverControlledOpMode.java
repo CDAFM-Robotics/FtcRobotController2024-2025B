@@ -140,8 +140,21 @@ public class DriverControlledOpMode extends LinearOpMode {
         robot.toggleClawGrabPosition();
       }
 
-      // the hand will dip down to pick up the sample and then come back up
+      // the hand will perform the correct Actions
       if (currentGamepad2.right_trigger > 0) {
+        if (robot.isArmPickup()) {
+          prevArmHandState = armHandState;
+          armHandState = ArmHandState.ARM_PICKUP;
+        }
+        if (robot.isArmTopDropReady()) {
+          prevArmHandState = armHandState;
+          armHandState = ArmHandState.ARM_DROP_READY;
+        }
+        if (robot.isArmBottomDropReady()) {
+          prevArmHandState = armHandState;
+          armHandState = ArmHandState.ARM_DROP_READY;
+        }
+
         switch (armHandState) {
           case ARM_PICKUP:
             prevArmHandState = armHandState;
@@ -183,7 +196,7 @@ public class DriverControlledOpMode extends LinearOpMode {
         robot.clawRotateServoRight();
       }
 
-
+      // Turn wrist joint by 90 degrees
       if (currentGamepad2.start && !previousGamepad2.start) {
         robot.toggleClawRotation();
       }
@@ -218,14 +231,14 @@ public class DriverControlledOpMode extends LinearOpMode {
       }
 
       // get ready to hang specimen on top bar
-      if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
+      if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left) {
         robot.topSpecimenBar();
         prevArmHandState = armHandState;
         armHandState = ArmHandState.ARM_TOP_SPECIMEN;
       }
 
       // drive position
-      if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left) {
+      if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
         robot.drivePosition();
         prevArmHandState = armHandState;
         armHandState = ArmHandState.ARM_HAND_DRIVE;
