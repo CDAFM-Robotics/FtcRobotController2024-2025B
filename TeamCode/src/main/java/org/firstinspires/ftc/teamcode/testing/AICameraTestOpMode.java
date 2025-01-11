@@ -7,6 +7,7 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -23,7 +24,10 @@ import org.firstinspires.ftc.teamcode.common.Robot;
 public class AICameraTestOpMode extends LinearOpMode {
 
     Robot robot = new Robot(this);
-
+    public Gamepad currentGamepad1 = new Gamepad();
+    public Gamepad previousGamepad1 = new Gamepad();
+    public Gamepad currentGamepad2 = new Gamepad();
+    public Gamepad previousGamepad2 = new Gamepad();
 
 
     private Limelight3A limelight;
@@ -53,6 +57,12 @@ public class AICameraTestOpMode extends LinearOpMode {
         limelight.start();
 
         while(opModeIsActive()){
+
+            previousGamepad1.copy(currentGamepad1);
+            currentGamepad1.copy(gamepad1);
+            previousGamepad2.copy(currentGamepad2);
+            currentGamepad2.copy(gamepad2);
+
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
 
             telemetry.addData("Yaw (Z)", "%.2f Deg. (Heading)", orientation.getYaw(AngleUnit.DEGREES));
@@ -74,7 +84,7 @@ public class AICameraTestOpMode extends LinearOpMode {
                 telemetry.addData("Limelight ", "no targets");
             }
 
-            if(robot.currentGamepad2.a && !robot.previousGamepad2.a){
+            if(currentGamepad2.a && !previousGamepad2.a){
 
                 int currentIndex = result.getPipelineIndex();
                 telemetry.addData("test thing", "yea we pressed it");

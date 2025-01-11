@@ -1,12 +1,14 @@
 package org.firstinspires.ftc.teamcode.autonomous;
 
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.common.Robot;
 
-@Autonomous(name = "Autonomous", group = "0competition")
+@Autonomous(name = "Autonomous", group = "zArchived")
+@Disabled
 public class BasicNoRRAutonomousOpMode extends LinearOpMode {
   Robot robot = new Robot(this);
   ElapsedTime elapsedTime = new ElapsedTime();
