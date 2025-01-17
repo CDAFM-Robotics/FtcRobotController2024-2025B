@@ -1,0 +1,183 @@
+package org.firstinspires.ftc.teamcode.common;
+
+import com.acmerobotics.roadrunner.Action;
+import com.acmerobotics.roadrunner.AngularVelConstraint;
+import com.acmerobotics.roadrunner.MinVelConstraint;
+import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.TranslationalVelConstraint;
+import com.acmerobotics.roadrunner.Vector2d;
+import com.qualcomm.robotcore.hardware.HardwareMap;
+
+import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
+
+import java.util.Arrays;
+
+public class RRPushTrajectories {
+
+  HardwareMap myHardwareMap;
+
+  MecanumDrive drive;
+
+  // Observation Side
+
+  public Action rightStartToBar;
+  public Action barToObservationZoneAnd3Samples;
+  public Action firstAllySampleToObservationZone;
+  public Action observationZoneToSecondAllySample;
+  public Action secondAllySampleToObservationZone;
+  public Action observationZoneToThirdAllySample;
+  public Action thirdAllySampleToObservationZone;
+  public Action observationZoneToSpecimenWallPos;
+  public Action specimenWallPosToBar;
+  public Action barToSpecimenWallPos;
+  public Action specimenWallPosToBar2;
+  public Action barToSpecimenWallPos2;
+  public Action specimenWallPosToBar3;
+  public Action barToSpecimenWallPos3;
+  public Action barToParkCorner;
+
+
+  public Action[] rightSideTrajectories;
+
+  // Sample Side
+
+  public Action leftStartToNet;
+  public Action netToFirstYellowSample;
+  public Action firstYellowSampleToNet;
+  public Action netToSecondYellowSample;
+  public Action secondYellowSampleToNet;
+  public Action netToThirdYellowSampleWall;
+  public Action thirdYellowSampleWallToNet;
+  public Action netToAscentZone;
+
+  public Action[] leftSideTrajectories;
+
+  public RRPushTrajectories(HardwareMap hardwareMap) {
+    myHardwareMap = hardwareMap;
+  }
+  public void initTrajectories() {
+
+    drive = new MecanumDrive(myHardwareMap, new Pose2d(24, -65 ,Math.PI / 2));
+
+    rightStartToBar = drive.actionBuilder(new Pose2d(24, -64, Math.PI / 2))
+      .splineToConstantHeading(new Vector2d(0,-31), Math.PI / 2)
+      .build();
+
+    barToObservationZoneAnd3Samples = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
+      .setTangent(-Math.PI / 2)
+      .splineToConstantHeading(new Vector2d(40, -24), Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(45, -15), 0, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(50, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(50, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(50, -24), Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(55, -15), 0, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(60, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(60, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(60, -24), Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(62, -15), 0, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(67, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(67, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToSplineHeading(new Pose2d(48, -50, -Math.PI / 2), -Math.PI / 2, new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(20), new AngularVelConstraint(Math.PI * 1 / 3))))
+      .strafeTo(new Vector2d(48, -60), new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(20), new AngularVelConstraint(Math.PI * 1 / 3))))
+      .build();
+
+    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -41, Math.PI * (1.6 / 9.0)))
+      .turnTo(-Math.PI * (3.0 / 9.0))
+      .build();
+/*
+    observationZoneToSecondAllySample = drive.actionBuilder(new Pose2d(35, -39, -Math.PI * (2.0 / 9.0)))
+      .strafeToSplineHeading(new Vector2d(45, -40),Math.PI * (2.0 / 9.0))
+      .build();
+
+    secondAllySampleToObservationZone = drive.actionBuilder(new Pose2d(45, -40, Math.PI * (2.0 / 9.0)))
+      .turnTo(-Math.PI * (2.0 / 9.0))
+      .build();
+
+    observationZoneToThirdAllySample = drive.actionBuilder(new Pose2d(45, -40, -Math.PI * (2.0 / 9.0)))
+      .strafeToSplineHeading(new Vector2d(55, -40),Math.PI * (2.0 / 9.0))
+      .build();
+
+    thirdAllySampleToObservationZone = drive.actionBuilder(new Pose2d(55, -40, Math.PI * (2.0 / 9.0)))
+      .turnTo(-Math.PI * (2.0 / 9.0))
+      .build();
+      */
+
+    observationZoneToSpecimenWallPos = drive.actionBuilder(new Pose2d(35, -41, -Math.PI * (3.0 / 9.0)))
+        .strafeToSplineHeading(new Vector2d(48, -50), -Math.PI / 2)
+        .strafeTo(new Vector2d(48, -60))
+        .build();
+
+    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -60, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(4, -31), Math.PI / 2)
+      .build();
+/*
+    barToSpecimenWallPos = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
+      .build();
+
+    specimenWallPosToBar2 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
+      .build();
+
+    barToSpecimenWallPos2 = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
+      .build();
+
+    specimenWallPosToBar3 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
+      .build();
+
+ */
+
+    barToParkCorner = drive.actionBuilder(new Pose2d(4, -31, Math.PI / 2))
+        .strafeTo(new Vector2d(62, -66))
+        .build();
+
+    rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, firstAllySampleToObservationZone, observationZoneToSecondAllySample, secondAllySampleToObservationZone, observationZoneToThirdAllySample, thirdAllySampleToObservationZone, observationZoneToSpecimenWallPos, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToParkCorner};
+
+    drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -65, Math.PI / 2));
+
+    leftStartToNet = drive.actionBuilder(new Pose2d(-39, -65, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+      .build();
+
+    netToFirstYellowSample = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0/4.0)))
+        .strafeToSplineHeading(new Vector2d(-48, -35), Math.PI / 2)
+        .build();
+
+    firstYellowSampleToNet = drive.actionBuilder(new Pose2d(-48, -35, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+      .build();
+
+    netToSecondYellowSample = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
+      .strafeToSplineHeading(new Vector2d(-60, -35), Math.PI / 2)
+      .build();
+
+    secondYellowSampleToNet = drive.actionBuilder(new Pose2d(-60, -35, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+      .build();
+
+    netToThirdYellowSampleWall = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
+      .strafeToSplineHeading(new Vector2d(-60, -26), Math.PI)
+      .build();
+
+    thirdYellowSampleWallToNet = drive.actionBuilder(new Pose2d(-60, -26, Math.PI))
+      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+      .build();
+
+    netToAscentZone = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
+      .setTangent(Math.PI / 2)
+      .splineToSplineHeading(new Pose2d(-54, -12, 0), Math.PI / 2)
+      .splineToConstantHeading(new Vector2d(-24, 0), 0)
+      .build();
+
+    leftSideTrajectories = new Action[] {leftStartToNet, netToFirstYellowSample, firstYellowSampleToNet, netToSecondYellowSample, secondYellowSampleToNet, netToThirdYellowSampleWall, thirdYellowSampleWallToNet, netToAscentZone};
+  }
+
+  public Action[] getRightSideTrajectories() {
+    return rightSideTrajectories;
+  }
+  public Action[] getLeftSideTrajectories() {
+    return leftSideTrajectories;
+  }
+}
