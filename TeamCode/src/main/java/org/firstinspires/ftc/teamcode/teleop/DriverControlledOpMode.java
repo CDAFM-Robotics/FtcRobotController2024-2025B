@@ -36,6 +36,8 @@ public class DriverControlledOpMode extends LinearOpMode {
   ElapsedTime timer = new ElapsedTime();
   int tickPerCycle;
 
+  ElapsedTime hangTimer = new ElapsedTime();
+
   //Create an instant of the Robot Class
   Robot robot = new Robot(this);
 
@@ -62,6 +64,8 @@ public class DriverControlledOpMode extends LinearOpMode {
     telemetry.update();
 
     waitForStart();
+
+    hangTimer.reset();
 
     while (opModeIsActive()) {
 
@@ -244,14 +248,17 @@ public class DriverControlledOpMode extends LinearOpMode {
         armHandState = ArmHandState.ARM_HAND_DRIVE;
       }
 
-      // get ready to hang the robot
-      if (currentGamepad1.y && !previousGamepad1.x) {
-        robot.getReadyToHangRobot();
-      }
+      if (hangTimer.seconds() >= 90) {
 
-      // hang the robot
-      if (currentGamepad1.x && !previousGamepad1.x) {
-        robot.HangRobot();
+        // get ready to hang the robot
+        if (currentGamepad1.y && !previousGamepad1.y) {
+          robot.getReadyToHangRobot();
+        }
+
+        // hang the robot
+        if (currentGamepad1.x && !previousGamepad1.x) {
+          robot.HangRobot();
+        }
       }
 
       /*********************************************************
