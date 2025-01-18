@@ -33,6 +33,8 @@ public class AICameraTestOpMode extends LinearOpMode {
     private Limelight3A limelight;
     private IMU imu;
 
+    int pipeline = 0;
+
 
 
     @Override
@@ -86,10 +88,20 @@ public class AICameraTestOpMode extends LinearOpMode {
 
             if(currentGamepad2.a && !previousGamepad2.a){
 
-                int currentIndex = result.getPipelineIndex();
-                telemetry.addData("test thing", "yea we pressed it");
-                limelight.pipelineSwitch(currentIndex += 1);
+                limelight.pipelineSwitch(pipeline += 1);
             }
+
+            if(pipeline == 10){
+                pipeline = 0;
+                limelight.pipelineSwitch(pipeline);
+            }
+
+            double ydist = Robot.LIMELIGHT_CAMERA_HEIGHT * Math.tan(Math.toRadians(Robot.LIMELIGHT_CAMERA_ANGLE - result.getTx()));
+            double xdist = ydist * Math.tan(Math.toRadians(result.getTy()));
+            telemetry.addData("result x", xdist);
+            telemetry.addData("result y", ydist);
+
+            telemetry.addData("pipeline", pipeline);
 
             telemetry.update();
         }
