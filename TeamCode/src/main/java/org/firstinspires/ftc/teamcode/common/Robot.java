@@ -88,6 +88,8 @@ public class Robot {
   public static double LENGTH_INSPECTION_BACK = 0;
   public static double LENGTH_ARM_EXTENDED = 50;
   public static double LENGTH_ARM_NORMAL = 13.375;
+  public static double LIMELIGHT_CAMERA_HEIGHT = 10.875;
+  public static double LIMELIGHT_CAMERA_ANGLE = 80.0;
 
   public static double CONVERT_DEGREES_TICKS_117RPM = 3.95861111111;
   public static double CONVERT_TICKS_DEGREES_117RPM = 1.0 / CONVERT_DEGREES_TICKS_117RPM;
