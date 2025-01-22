@@ -22,11 +22,6 @@ public class RRPushTrajectories {
 
   public Action rightStartToBar;
   public Action barToObservationZoneAnd3Samples;
-  public Action firstAllySampleToObservationZone;
-  public Action observationZoneToSecondAllySample;
-  public Action secondAllySampleToObservationZone;
-  public Action observationZoneToThirdAllySample;
-  public Action thirdAllySampleToObservationZone;
   public Action observationZoneToSpecimenWallPos;
   public Action specimenWallPosToBar;
   public Action barToSpecimenWallPos;
@@ -34,6 +29,7 @@ public class RRPushTrajectories {
   public Action barToSpecimenWallPos2;
   public Action specimenWallPosToBar3;
   public Action barToSpecimenWallPos3;
+  public Action specimenWallPosToBar4;
   public Action barToParkCorner;
 
 
@@ -60,80 +56,71 @@ public class RRPushTrajectories {
     drive = new MecanumDrive(myHardwareMap, new Pose2d(24, -65 ,Math.PI / 2));
 
     rightStartToBar = drive.actionBuilder(new Pose2d(24, -64, Math.PI / 2))
-      .splineToConstantHeading(new Vector2d(0,-31), Math.PI / 2)
+      .splineToConstantHeading(new Vector2d(0,-36.5), Math.PI / 2) // 0,-31 -> -36
       .build();
 
-    barToObservationZoneAnd3Samples = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
+    barToObservationZoneAnd3Samples = drive.actionBuilder(new Pose2d(0, -36, Math.PI / 2)) // 0,-31 -> 0,-36
       .setTangent(-Math.PI / 2)
-      .splineToConstantHeading(new Vector2d(40, -24), Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(45, -15), 0, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(50, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(50, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(50, -24), Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(55, -15), 0, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(60, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(60, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(60, -24), Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(62, -15), 0, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(67, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToConstantHeading(new Vector2d(67, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
+      .splineToConstantHeading(new Vector2d(40, -34), Math.PI / 2, new TranslationalVelConstraint(25)) //was -24
+      .splineToConstantHeading(new Vector2d(45, -15), 0, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(50, -24), -Math.PI / 2, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(50, -53), -Math.PI / 2, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(50, -24), Math.PI / 2, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(55, -15), 0, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(60, -24), -Math.PI / 2, new TranslationalVelConstraint(25))
+      .splineToConstantHeading(new Vector2d(60, -54), -Math.PI / 2, new TranslationalVelConstraint(25))
+      //.splineToConstantHeading(new Vector2d(60, -24), Math.PI / 2, new TranslationalVelConstraint(20))
+      //.splineToConstantHeading(new Vector2d(62, -15), 0, new TranslationalVelConstraint(20))
+      //.splineToConstantHeading(new Vector2d(67, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
+      //.splineToConstantHeading(new Vector2d(67, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
       .splineToSplineHeading(new Pose2d(48, -50, -Math.PI / 2), -Math.PI / 2, new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(20), new AngularVelConstraint(Math.PI * 1 / 3))))
-      .strafeTo(new Vector2d(48, -60), new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(20), new AngularVelConstraint(Math.PI * 1 / 3))))
+      .strafeTo(new Vector2d(48, -63), new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(10), new AngularVelConstraint(Math.PI * 1 / 3))))
       .build();
 
-    firstAllySampleToObservationZone = drive.actionBuilder(new Pose2d(35, -41, Math.PI * (1.6 / 9.0)))
-      .turnTo(-Math.PI * (3.0 / 9.0))
-      .build();
-/*
-    observationZoneToSecondAllySample = drive.actionBuilder(new Pose2d(35, -39, -Math.PI * (2.0 / 9.0)))
-      .strafeToSplineHeading(new Vector2d(45, -40),Math.PI * (2.0 / 9.0))
+    // WHy is start pos -60 instead of -64?
+    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -63, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(2, -38.2), Math.PI / 2) // was -38
       .build();
 
-    secondAllySampleToObservationZone = drive.actionBuilder(new Pose2d(45, -40, Math.PI * (2.0 / 9.0)))
-      .turnTo(-Math.PI * (2.0 / 9.0))
+    // Correcting posiotn x on initial Pose3d to 2 (was -2) and PositionY to -36 (was -31)
+    barToSpecimenWallPos = drive.actionBuilder(new Pose2d(2, -36, Math.PI / 2))
+      .setTangent(-Math.PI / 2)
+      .splineToSplineHeading(new Pose2d(48, -50, -Math.PI / 2), 0)
+      .strafeTo(new Vector2d(48, -66))
       .build();
 
-    observationZoneToThirdAllySample = drive.actionBuilder(new Pose2d(45, -40, -Math.PI * (2.0 / 9.0)))
-      .strafeToSplineHeading(new Vector2d(55, -40),Math.PI * (2.0 / 9.0))
+    // Correcting positon X on initial POse3d to 48 (was 40.5),
+    specimenWallPosToBar2 = drive.actionBuilder(new Pose2d(48, -66, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(4, -38.2), Math.PI / 2)
       .build();
 
-    thirdAllySampleToObservationZone = drive.actionBuilder(new Pose2d(55, -40, Math.PI * (2.0 / 9.0)))
-      .turnTo(-Math.PI * (2.0 / 9.0))
-      .build();
-      */
-
-    observationZoneToSpecimenWallPos = drive.actionBuilder(new Pose2d(35, -41, -Math.PI * (3.0 / 9.0)))
-        .strafeToSplineHeading(new Vector2d(48, -50), -Math.PI / 2)
-        .strafeTo(new Vector2d(48, -60))
-        .build();
-
-    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -60, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(4, -31), Math.PI / 2)
-      .build();
-/*
-    barToSpecimenWallPos = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
+    // Correcting position X on initial to 6 (was 2) to account for new location
+    barToSpecimenWallPos2 = drive.actionBuilder(new Pose2d(4, -36, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(48, -50), -Math.PI / 2)
+      .strafeTo(new Vector2d(48, -64))
       .build();
 
-    specimenWallPosToBar2 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
+    // Correcitng position X to 48 (was 40.5) and -50 -> -64)
+    specimenWallPosToBar3 = drive.actionBuilder(new Pose2d(48, -64, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(6, -36), Math.PI / 2) // was 0:-30
+      .build();
+
+    // Correcting position 0,-31 to 8,-36
+    barToSpecimenWallPos3 = drive.actionBuilder(new Pose2d(6, -36, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(48, -64), -Math.PI / 2) // 40.5,-50
+      .strafeTo(new Vector2d(48, -64))
+      .build();
+
+    specimenWallPosToBar4 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
       .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
       .build();
 
-    barToSpecimenWallPos2 = drive.actionBuilder(new Pose2d(0, -31, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(40.5, -50), -Math.PI / 2)
-      .build();
-
-    specimenWallPosToBar3 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
-      .build();
-
- */
-
-    barToParkCorner = drive.actionBuilder(new Pose2d(4, -31, Math.PI / 2))
-        .strafeTo(new Vector2d(62, -66))
+    // 4,-31 -> 6,-36
+    barToParkCorner = drive.actionBuilder(new Pose2d(6, -36, Math.PI / 2))
+        .strafeTo(new Vector2d(60, -72))
         .build();
 
-    rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, firstAllySampleToObservationZone, observationZoneToSecondAllySample, secondAllySampleToObservationZone, observationZoneToThirdAllySample, thirdAllySampleToObservationZone, observationZoneToSpecimenWallPos, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToParkCorner};
+    rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToSpecimenWallPos3, specimenWallPosToBar4, barToParkCorner};
 
     drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -65, Math.PI / 2));
 

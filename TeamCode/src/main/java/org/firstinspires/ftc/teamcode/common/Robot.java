@@ -41,9 +41,10 @@ public class Robot {
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
   public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
-  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.525;
+  public static double CLAW_PAN_POSITION_AUTO_HANG = 0.2;
   public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.15;
   public static double CLAW_PAN_SPEED = 0.025;
+
   public static double CLAW_ROTATE_SPEED = 0.025;
   public static double CLAW_ROTATE_MAX = 0.8125;
   public static double CLAW_ROTATE_MIN = 0.1825;
@@ -51,14 +52,15 @@ public class Robot {
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 8085;
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 2550;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1250;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN = 1450;
   public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 140;
   public static int ARM_EXT_PICKUP_SAMPLES = 2293;
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_EXT_PICKUP_WALL = 0;
   public static int ARM_EXT_HANG_ROBOT = 4950;
   public static int ARM_EXT_HANG_ROBOT_PULL = 1652;
-  public static int ARM_EXT_AUTO_HANG = 1366;
+  public static int ARM_EXT_AUTO_HANG = 2320;
+  public static int ARM_EXT_AUTO_HANG_PULL = 350;
   public static int ARM_EXT_AUTO_PICKUP = 2000;
   public static int ARM_EXT_AUTO_DROP_OBSERVE = 4600;
 
@@ -68,10 +70,10 @@ public class Robot {
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
   public static int ARM_ROT_PICKUP_SAMPLES = 295;
   public static int ARM_ROT_PICKUP_WALL = 248;
-  public static int ARM_ROT_AUTO_PICKUP_WALL = 248;
+  public static int ARM_ROT_AUTO_PICKUP_WALL = 200;
   public static int ARM_ROT_DRIVE = 497;
   public static int ARM_ROT_HANG_ROBOT = 1050;
-  public static int ARM_ROT_AUTO_HANG = 1251;
+  public static int ARM_ROT_AUTO_HANG = 1165;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
   public static int ARM_ROT_AUTO_PICKUP = 264;
 
