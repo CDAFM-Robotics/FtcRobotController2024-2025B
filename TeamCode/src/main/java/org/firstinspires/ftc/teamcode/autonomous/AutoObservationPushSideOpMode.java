@@ -23,6 +23,7 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     rrTrajectories = new RRPushTrajectories(this.hardwareMap);
 
     robot.initializeArmDevices();
+    robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO);
     rrTrajectories.initTrajectories();
     trajectories = rrTrajectories.getRightSideTrajectories();
 
