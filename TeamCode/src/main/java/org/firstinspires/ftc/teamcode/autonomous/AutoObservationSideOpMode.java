@@ -57,7 +57,7 @@ public class AutoObservationSideOpMode extends LinearOpMode {
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP);
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_PICKUP);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP);
-    robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_AUTO_PICKUP);
+    robot.setClawRotateServoPosition(0);
 
     while (Math.abs(robot.slideExtensionMotor.getCurrentPosition() - robot.slideExtensionMotor.getTargetPosition()) > 10 || Math.abs(robot.slideRotationMotor.getCurrentPosition() - robot.slideRotationMotor.getTargetPosition()) > 10) {
       continue;

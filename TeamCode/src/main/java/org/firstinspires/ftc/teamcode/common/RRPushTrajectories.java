@@ -53,7 +53,7 @@ public class RRPushTrajectories {
   }
   public void initTrajectories() {
 
-    drive = new MecanumDrive(myHardwareMap, new Pose2d(24, -65 ,Math.PI / 2));
+    drive = new MecanumDrive(myHardwareMap, new Pose2d(24, -64 ,Math.PI / 2));
 
     rightStartToBar = drive.actionBuilder(new Pose2d(24, -64, Math.PI / 2))
       .splineToConstantHeading(new Vector2d(0,-36), Math.PI / 2) // 0,-31 -> -36
@@ -125,9 +125,9 @@ public class RRPushTrajectories {
 
     rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToSpecimenWallPos3, specimenWallPosToBar4, barToParkCorner};
 
-    drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -65, Math.PI / 2));
+    drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -64, Math.PI / 2));
 
-    leftStartToNet = drive.actionBuilder(new Pose2d(-39, -65, Math.PI / 2))
+    leftStartToNet = drive.actionBuilder(new Pose2d(-39, -64, Math.PI / 2))
       .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
       .build();
 
