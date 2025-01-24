@@ -36,7 +36,7 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
 
     Actions.runBlocking(trajectories[0]);
 
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 50); // TODO
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 19); // TODO (50/2.66)
 
     sleep(800);
 
@@ -64,19 +64,20 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     sleep(300);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
+    //sleep (200); // TODO jw new motor slight delay
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
     Actions.runBlocking(trajectories[2]);
 
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 50); // TODO
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 19); // TODO
 
     sleep(800);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
     //robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
     //robot.slideRotationMotor.setTargetPosition(1400); // Was 1280
-    //robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
+    //robot.slideExtensionMotor/home/winter/StudioProjects/FtcRobotController2024-2025/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/common/Robot.java.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
     //robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
 
     sleep(200);
@@ -99,7 +100,7 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
 
     Actions.runBlocking(trajectories[4]);
 
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 50 ); // TODO +50 pull less
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL + 19); // TODO was +50 for 117RPPM
 
     sleep(800);
 
