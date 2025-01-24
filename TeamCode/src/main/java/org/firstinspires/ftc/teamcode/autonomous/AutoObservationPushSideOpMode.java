@@ -30,68 +30,46 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
 
     waitForStart();
 
-    // HANG FIRST SPECIMEN
+    // HANG FIRST (HELD) SPECIMEN
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
     Actions.runBlocking(trajectories[0]);
 
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL); // TODO (50/2.66)
-    // robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG-100); // TODO Swoop
+    robot.slideExtensionMotor.setPower(1.0); // TODO FULL SPEED RETRACT ON HANGPULL
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL);
+    sleep(550);
 
-    sleep(800);
-
-
-    //robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
     sleep(200);
-    //robot.slideExtensionMotor.setTargetPosition(0);
-    //robot.slideRotationMotor.setTargetPosition(1400); //Was 1280?
-    //robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
-    //robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
 
-    //sleep(400);
 
-    //robot.slideExtensionMotor.setPower(1.0); // TODO try a Full speed retract
     robot.slideExtensionMotor.setTargetPosition(0);
-    //robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
-
     robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
 
     Actions.runBlocking(trajectories[1]);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-
     sleep(300);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
-    //sleep (200); // TODO jw new motor slight delay
-    //robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO revert Normal Speed
+    robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO revert SLOW Speed FOR WALL PICKUP
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
     Actions.runBlocking(trajectories[2]);
 
-
+    robot.slideExtensionMotor.setPower(1.0); // TODO FULL SPEED RETRACT
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL); // TODO
-    //robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG-100); // TODO Swoop
-
-    sleep(800);
+    sleep(550);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    //robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
-    //robot.slideRotationMotor.setTargetPosition(1400); // Was 1280
-    //robot.slideExtensionMotor/home/winter/StudioProjects/FtcRobotController2024-2025/TeamCode/src/main/java/org/firstinspires/ftc/teamcode/common/Robot.java.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
-    //robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
-
     sleep(200);
 
-    //robot.slideExtensionMotor.setPower(1); // TODO: Full speed retract
     robot.slideExtensionMotor.setTargetPosition(0);
-    //robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
     robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
@@ -99,45 +77,31 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     Actions.runBlocking(trajectories[3]);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-
     sleep(300);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
-    //robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO: Revert to normal speed
+    robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO: Revert to normal speed FOR EXTEND
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
     Actions.runBlocking(trajectories[4]);
 
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL); // TODO was +50 for 117RPPM
-    //robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG-100); // TODO Swoop
-
-    sleep(800);
+    robot.slideExtensionMotor.setPower(1.0); // TODO: FULL SPEED RETRACT
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL);
+    sleep(550);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    //robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
-    //robot.slideRotationMotor.setTargetPosition(1400); //  : Was 1280
-    //robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
-    //robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
-
     sleep(200);
 
-    //robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_DROP_OFF_SAMPLES);
-    //robot.slideExtensionMotor.setPower(1.0); // TODO: Try Full Speed retract
     robot.slideExtensionMotor.setTargetPosition(0);
-    //robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
     robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
-
 
     // PARK AND RE-SET ZEROS
     Actions.runBlocking(trajectories[9]);
 
     robot.slideRotationMotor.setTargetPosition(0);
-    //robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    //robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
-    //robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
 
     sleep(5000);
 
