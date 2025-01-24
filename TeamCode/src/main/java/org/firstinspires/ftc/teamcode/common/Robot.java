@@ -79,8 +79,8 @@ public class Robot {
   public static int ARM_EXT_HANG_ROBOT = 2100;
   public static int ARM_EXT_HANG_ROBOT_PULL = 500;
 
-  public static int ARM_EXT_AUTO_HANG = 830; //todo fine tune 2320/2.66 (872)
-  public static int ARM_EXT_AUTO_HANG_PULL = 125; //todo fine tune  350/2.66 (131)
+  public static int ARM_EXT_AUTO_HANG = 800; //todo fine tune 2320/2.66 (872)
+  public static int ARM_EXT_AUTO_HANG_PULL = 120; //todo fine tune  350/2.66 (131)
   public static int ARM_EXT_AUTO_PICKUP = (int) (2000/2.66); //todo fine tune
   public static int ARM_EXT_AUTO_DROP_OBSERVE = (int) (4600/2.66); //todo fine tune
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
@@ -94,7 +94,7 @@ public class Robot {
   public static int ARM_ROT_AUTO_PICKUP_WALL = 200;
   public static int ARM_ROT_DRIVE = 497;
   public static int ARM_ROT_HANG_ROBOT = 1050;
-  public static int ARM_ROT_AUTO_HANG = 1165;
+  public static int ARM_ROT_AUTO_HANG = 1160;
   public static int ARM_ROT_AUTO_DROP_OFF_SAMPLES = 1478;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
   public static int ARM_ROT_AUTO_PICKUP = 295;
@@ -102,7 +102,7 @@ public class Robot {
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_ROT_POWER_FULL = 1.0;
   public static double ARM_EXT_POWER = 1.0;
-  public static double ARM_EXT_POWER_AUTO = 0.5;
+  public static double ARM_EXT_POWER_AUTO = 0.38;
   public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0 / 3.0;
 
