@@ -21,6 +21,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 import org.firstinspires.ftc.teamcode.common.Robot;
 
 @TeleOp (name = "AICAMERA", group = "testing")
+@Disabled
 public class AICameraTestOpMode extends LinearOpMode {
 
     Robot robot = new Robot(this);

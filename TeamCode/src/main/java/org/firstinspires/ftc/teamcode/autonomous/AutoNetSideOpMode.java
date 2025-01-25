@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.autonomous;
 import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.common.RRPushTrajectories;
@@ -10,6 +11,7 @@ import org.firstinspires.ftc.teamcode.common.RRTrajectories;
 import org.firstinspires.ftc.teamcode.common.Robot;
 
 @Autonomous(name = "Net Zone Autonomous", group = "0Competition")
+@Disabled
 public class AutoNetSideOpMode extends LinearOpMode {
 
   RRPushTrajectories rrPushTrajectories;

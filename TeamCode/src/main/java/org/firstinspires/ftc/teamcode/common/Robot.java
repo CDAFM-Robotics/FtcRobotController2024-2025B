@@ -106,8 +106,8 @@ public class Robot {
   public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0 / 3.0;
 
-  public static double LENGTH_CLAW = 9;
-  public static double LENGTH_INSPECTION_FRONT = 30;
+  public static double LENGTH_CLAW = 7;
+  public static double LENGTH_INSPECTION_FRONT = 35;
   public static double LENGTH_INSPECTION_BACK = 0;
   public static double LENGTH_ARM_EXTENDED = 50;
   public static double LENGTH_ARM_NORMAL = 13.375;
@@ -116,6 +116,8 @@ public class Robot {
 
   public static double CONVERT_DEGREES_TICKS_117RPM = 3.95861111111;
   public static double CONVERT_TICKS_DEGREES_117RPM = 1.0 / CONVERT_DEGREES_TICKS_117RPM;
+  public static double CONVERT_DEGREES_TICKS_312RPM = 1.4936111111;
+  public static double CONVERT_TICKS_DEGREES_312RPM = 1.0 / CONVERT_DEGREES_TICKS_117RPM;
   public static double CONVERT_DEGREES_INCHES_SLIDE = 0.013177365175032795;
   public static double CONVERT_INCHES_DEGREES_SLIDE = 1.0 / CONVERT_DEGREES_INCHES_SLIDE;
 
@@ -289,10 +291,10 @@ public class Robot {
   }
 
   public void setSlideExtMotorTargetPosWithLimit(int position) {
-    checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
+    checkSoftLimits(convertTicksToDegrees312RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
             slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
 
-    slideExtensionTargetPosition = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
+    slideExtensionTargetPosition = convertDegreesToTicks312RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
   }
 
   // Get Slide Extension Motor Target position
@@ -423,10 +425,10 @@ public class Robot {
 
   public void checkExtentionLimit () {
     // check limit
-    checkSoftLimits(convertTicksToDegrees117RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
+    checkSoftLimits(convertTicksToDegrees312RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
             slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
     // check to see if the
-    int max = convertDegreesToTicks117RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
+    int max = convertDegreesToTicks312RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
     if (slideExtensionMotor.getCurrentPosition() > max) {
       slideExtensionTargetPosition = max;
     }
@@ -522,6 +524,13 @@ public class Robot {
     return ticks * CONVERT_TICKS_DEGREES_117RPM;
   }
 
+  public int convertDegreesToTicks312RPM(double degrees) {
+    return (int) Math.round(degrees * CONVERT_DEGREES_TICKS_312RPM);
+  }
+
+  public double convertTicksToDegrees312RPM(int ticks) {
+    return ticks * CONVERT_TICKS_DEGREES_312RPM;
+  }
   public void getReadyToHangRobot() {
     slideRotationMotor.setPower(ARM_ROT_POWER);
     slideRotationTargetPosition = ARM_ROT_HANG_ROBOT;
