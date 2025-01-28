@@ -34,9 +34,9 @@ public class Robot {
 
   public static double CLAW_PAN_TELEOP_INIT = 0.525;
   public static double CLAW_PAN_POSITION_DROP_DIP = 0.6; // don't retract slide with this position!!!
-  public static double CLAW_PAN_POSITION_STRAIGHT = 0.21;
-  public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.11;          ;
-  public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.5494;
+  public static double CLAW_PAN_POSITION_STRAIGHT = 0.225;
+  public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.135;          ;
+  public static double CLAW_PAN_POSITION_PICKUP_WALL = 0.5450;
   public static double CLAW_PAN_POSITION_AUTO_PICKUP_WALL = 0.5494;
   public static double CLAW_PAN_POSITION_TOP_SPECIMEN = 0.245;
   public static double CLAW_PAN_POSITION_DRIVE = 0.1994;
@@ -71,11 +71,11 @@ public class Robot {
   public static int ARM_EXT_INIT = 0;
   public static int ARM_EXT_DROP_TOP_BASKET = 3060;
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 1024;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN = 608;
-  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 21;
-  public static int ARM_EXT_PICKUP_SAMPLES = 1316;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN = 628;
+  public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 28;
+  public static int ARM_EXT_PICKUP_SAMPLES = 0;
   public static int ARM_EXT_DRIVE = 0;
-  public static int ARM_EXT_PICKUP_WALL = 0;
+  public static int ARM_EXT_PICKUP_WALL = 28;
   public static int ARM_EXT_HANG_ROBOT = 2100;
   public static int ARM_EXT_HANG_ROBOT_PULL = 500;
 
@@ -86,13 +86,13 @@ public class Robot {
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1478;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 1560;
   public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
-  public static int ARM_ROT_PICKUP_SAMPLES = 335;
-  public static int ARM_ROT_PICKUP_WALL = 248;
+  public static int ARM_ROT_PICKUP_SAMPLES = 276;
+  public static int ARM_ROT_PICKUP_WALL = 297;
   public static int ARM_ROT_AUTO_PICKUP_WALL = 200;
-  public static int ARM_ROT_DRIVE = 497;
+  public static int ARM_ROT_DRIVE = 547;
   public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1040; //1068; //1160
   public static int ARM_ROT_AUTO_DROP_OFF_SAMPLES = 1478;
@@ -292,7 +292,7 @@ public class Robot {
 
   public void setSlideExtMotorTargetPosWithLimit(int position) {
     checkSoftLimits(convertTicksToDegrees312RPM(slideExtensionMotor.getCurrentPosition()) * Robot.CONVERT_DEGREES_INCHES_SLIDE,
-            slideRotationMotor.getCurrentPosition() / 14.6697222222 - 17.6);
+            (slideRotationMotor.getCurrentPosition() - 327) / 14.6697222222);
 
     slideExtensionTargetPosition = convertDegreesToTicks312RPM((maxExtension - LENGTH_ARM_NORMAL) * CONVERT_INCHES_DEGREES_SLIDE);
   }
