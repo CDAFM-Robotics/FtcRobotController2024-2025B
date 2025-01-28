@@ -77,7 +77,8 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     Actions.runBlocking(trajectories[3]);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-    sleep(300);
+
+    sleep(400);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
     robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO: Revert to normal speed FOR EXTEND
