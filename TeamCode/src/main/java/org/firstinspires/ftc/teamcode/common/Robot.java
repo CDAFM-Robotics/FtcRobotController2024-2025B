@@ -32,7 +32,7 @@ public class Robot {
   public static double CLAW_ROTATE_POSITION_AUTO_PICKUP = 0.65;
   public static double CLAW_ROTATE_POSITION_RIGHT = 0.8375;
 
-  public static double CLAW_PAN_TELEOP_INIT = 0.525;
+  public static double CLAW_PAN_TELEOP_INIT = 0.65;
   public static double CLAW_PAN_POSITION_DROP_DIP = 0.6; // don't retract slide with this position!!!
   public static double CLAW_PAN_POSITION_STRAIGHT = 0.225;
   public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.135;          ;
