@@ -56,7 +56,7 @@ public class AutoNetSideOpMode extends LinearOpMode {
 
     robot.slideRotationMotor.setPower(0.3);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP);
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_PICKUP);
+    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_PICKUP - 50);
 
     Actions.runBlocking(trajectories[1]);
 
@@ -128,9 +128,10 @@ public class AutoNetSideOpMode extends LinearOpMode {
 
     sleep(700);
 
+    robot.slideExtensionMotor.setTargetPosition(0);
+    sleep(300);
     robot.slideRotationMotor.setPower(0.3);
     robot.slideRotationMotor.setTargetPosition(0);
-    robot.slideExtensionMotor.setTargetPosition(0);
 
     sleep(100000);
 

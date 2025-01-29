@@ -79,7 +79,7 @@ public class Robot {
   public static int ARM_EXT_DRIVE = 0;
   public static int ARM_EXT_PICKUP_WALL = 28;
   public static int ARM_EXT_HANG_ROBOT = 2100;
-  public static int ARM_EXT_HANG_ROBOT_PULL = 500;
+  public static int ARM_EXT_HANG_ROBOT_PULL = 200;
 
   public static int ARM_EXT_AUTO_HANG = 1040; // TODO: 1009(1:21pm) 24Jan->1034->1040 little higher for different grip on spec
   public static int ARM_EXT_AUTO_HANG_PULL = 425;
@@ -386,6 +386,7 @@ public class Robot {
     slideExtensionMotor.setPower(ARM_EXT_POWER);
     slideExtensionTargetPosition = ARM_EXT_PICKUP_WALL;
     clawPanPosition = CLAW_PAN_POSITION_PICKUP_WALL;
+    clawGrabPosition = CLAW_GRAB_POSITION_OPEN;
   }
 
   // Top Specimen Bar
