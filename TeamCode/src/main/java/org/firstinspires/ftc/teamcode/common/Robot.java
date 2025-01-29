@@ -43,8 +43,9 @@ public class Robot {
   public static double CLAW_PAN_POSITION_HANG_ROBOT = 0.075;
   public static double CLAW_PAN_POSITION_AUTO_HANG = 0.2;
   public static double CLAW_PAN_POSITION_AUTO_DROP_DIP = 0.6;
-  public static double CLAW_PAN_POSITION_AUTO_STRAIGHT = 0.21;
-  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.21;
+  public static double CLAW_PAN_POSITION_AUTO_STRAIGHT = 0.225;
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP = 0.225;
+  public static double CLAW_PAN_POSITION_AUTO_PICKUP_DIP = 0.135;          ;
   public static double CLAW_PAN_SPEED = 0.025;
 
   public static double CLAW_ROTATE_SPEED = 0.100;
@@ -82,7 +83,7 @@ public class Robot {
 
   public static int ARM_EXT_AUTO_HANG = 1040; // TODO: 1009(1:21pm) 24Jan->1034->1040 little higher for different grip on spec
   public static int ARM_EXT_AUTO_HANG_PULL = 425;
-  public static int ARM_EXT_AUTO_PICKUP = (int) (2000/2.66); //todo fine tune
+  public static int ARM_EXT_AUTO_PICKUP = 1152; //todo fine tune
   public static int ARM_EXT_AUTO_DROP_OBSERVE = (int) (4600/2.66); //todo fine tune
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
 
@@ -96,9 +97,9 @@ public class Robot {
   public static int ARM_ROT_DRIVE = 547;
   public static int ARM_ROT_HANG_ROBOT = 1050;
   public static int ARM_ROT_AUTO_HANG = 1040; //1068; //1160
-  public static int ARM_ROT_AUTO_DROP_OFF_SAMPLES = 1478;
+  public static int ARM_ROT_AUTO_DROP_OFF_SAMPLES = 1560;
   public static int ARM_ROT_AUTO_DRIVE = 1123;
-  public static int ARM_ROT_AUTO_PICKUP = 295;
+  public static int ARM_ROT_AUTO_PICKUP = 356;
 
   public static double ARM_ROT_POWER = 0.5;
   public static double ARM_ROT_POWER_FULL = 1.0;
