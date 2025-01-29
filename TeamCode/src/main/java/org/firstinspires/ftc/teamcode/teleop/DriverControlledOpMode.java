@@ -117,19 +117,28 @@ public class DriverControlledOpMode extends LinearOpMode {
       // Driver Arm Extension Control
       if (currentGamepad2.right_stick_y < 0) {
         robot.setSlideExtensionMotorPower(currentGamepad2.right_stick_y * Math.pow(currentGamepad2.right_stick_y,2));
-        robot.setSlideExtMotorTargetPosWithLimit(robot.ARM_EXT_DROP_TOP_BASKET);
+        if (robot.isArmPickup()) {
+          robot.setRotationTargetForPickUp();
+          robot.setSlideExtMotorTargetPosWithLimit(robot.ARM_EXT_PICKUP_SAMPLES_EXT);
+        }
+        else {
+          robot.setSlideExtMotorTargetPosWithLimit(robot.ARM_EXT_DROP_TOP_BASKET);
+        }
         prevArmHandState = armHandState;
         armHandState = ArmHandState.DRIVER_CONTROL;
       }
       else if (currentGamepad2.right_stick_y > 0) {
         robot.setSlideExtensionMotorPower(currentGamepad2.right_stick_y * Math.pow(currentGamepad2.right_stick_y,2));
+        if (robot.isArmPickup()) {
+          robot.setRotationTargetForPickUp();
+        }
         robot.setSlideExtensionMotorTargetPosition(robot.ARM_EXT_INIT);
         prevArmHandState = armHandState;
         armHandState = ArmHandState.DRIVER_CONTROL;
       }
       else {
         if (currentGamepad2.right_stick_y == 0 && previousGamepad2.right_stick_y != 0) {
-          robot.setSlideExtensionMotorPower(robot.ARM_ROT_POWER_FULL);
+          robot.setSlideExtensionMotorPower(robot.ARM_EXT_POWER);
           robot.setSlideExtensionMotorTargetPosition(robot.getSlideExtensionMotorCurrentPosition());
           prevArmHandState = armHandState;
           armHandState = ArmHandState.ARM_HOLD;
