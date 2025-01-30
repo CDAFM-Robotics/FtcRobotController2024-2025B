@@ -53,79 +53,62 @@ public class RRPushTrajectories {
   }
   public void initTrajectories() {
 
-    drive = new MecanumDrive(myHardwareMap, new Pose2d(24, -68 ,Math.PI / 2));
+    // START
+    drive = new MecanumDrive(myHardwareMap, new Pose2d(12, -64.5 ,Math.PI / 2));
 
-    rightStartToBar = drive.actionBuilder(new Pose2d(24, -68, Math.PI / 2))
-      .splineToConstantHeading(new Vector2d(0,-40), Math.PI / 2) // 0,-31 -> -36 -> -35 (new motor)
+    // HELD SPECIMEN TO BAR
+    rightStartToBar = drive.actionBuilder(new Pose2d(12, -64.5, Math.PI / 2))
+      .splineToConstantHeading(new Vector2d(10,-38.5), Math.PI / 2) // 0,-31 -> -36 -> -35 (new motor)
       .build();
 
-    barToObservationZoneAnd3Samples = drive.actionBuilder(new Pose2d(0, -40, Math.PI / 2)) // 0,-31 -> 0,-36
+    // PUSH 2 Samples BACK to WALL
+    barToObservationZoneAnd3Samples = drive.actionBuilder(new Pose2d(10, -38.5, Math.PI / 2)) // 0,-31 -> 0,-36
       .setTangent(-Math.PI / 2) // TODO: 1:22 24Jan 50->53 (slightly more left)
-      .splineToConstantHeading(new Vector2d(40, -34), Math.PI / 2, new TranslationalVelConstraint(25)) //was -24
-      .splineToConstantHeading(new Vector2d(45, -15), 0, new TranslationalVelConstraint(25))
-      .splineToConstantHeading(new Vector2d(56, -24), -Math.PI / 2, new TranslationalVelConstraint(25))
-      .splineToConstantHeading(new Vector2d(56, -53), -Math.PI / 2, new TranslationalVelConstraint(30)) // TODO
-      .splineToConstantHeading(new Vector2d(51, -24), Math.PI / 2, new TranslationalVelConstraint(25))
-      .splineToConstantHeading(new Vector2d(58, -15), 0, new TranslationalVelConstraint(25))
-      .splineToConstantHeading(new Vector2d(66, -24), -Math.PI / 2, new TranslationalVelConstraint(25))
-      .splineToConstantHeading(new Vector2d(66, -54), -Math.PI / 2, new TranslationalVelConstraint(30)) // TODO
-      //.splineToConstantHeading(new Vector2d(60, -24), Math.PI / 2, new TranslationalVelConstraint(20))
-      //.splineToConstantHeading(new Vector2d(62, -15), 0, new TranslationalVelConstraint(20))
-      //.splineToConstantHeading(new Vector2d(67, -24), -Math.PI / 2, new TranslationalVelConstraint(20))
-      //.splineToConstantHeading(new Vector2d(67, -51), -Math.PI / 2, new TranslationalVelConstraint(20))
-      .splineToSplineHeading(new Pose2d(48, -50, -Math.PI / 2), -Math.PI / 2, new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(20), new AngularVelConstraint(Math.PI * 2 / 3)))) // TODO
-      // -63 -> -62
-      .strafeTo(new Vector2d(48, -64), new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(10), new AngularVelConstraint(Math.PI * 2 / 3)))) // TODO 1/3->2/3 do we need ang constraint here?
+            // TODO 28 speed constraint on trajectory
+      .splineToConstantHeading(new Vector2d(35, -34), Math.PI / 2, new TranslationalVelConstraint(26)) //x:40 was -24
+      .splineToConstantHeading(new Vector2d(40, -15), 0, new TranslationalVelConstraint(26))
+      .splineToConstantHeading(new Vector2d(51, -24), -Math.PI / 2, new TranslationalVelConstraint(26))
+      .splineToConstantHeading(new Vector2d(51, -53), -Math.PI / 2, new TranslationalVelConstraint(30)) // TODO
+      .splineToConstantHeading(new Vector2d(46, -24), Math.PI / 2, new TranslationalVelConstraint(26))
+      .splineToConstantHeading(new Vector2d(53, -15), 0, new TranslationalVelConstraint(26))
+      .splineToConstantHeading(new Vector2d(61, -24), -Math.PI / 2, new TranslationalVelConstraint(26))
+      .splineToConstantHeading(new Vector2d(61, -53), -Math.PI / 2, new TranslationalVelConstraint(30)) // TODO
+            // TODO ------------- position for wall approach
+      .splineToSplineHeading(new Pose2d(48, -48, -Math.PI / 2), -Math.PI / 2, new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(25), new AngularVelConstraint(Math.PI * 2 / 3)))) // TODO
+      // -63 -> -62 // was -50 moved forward to hopefully not hit sample on spin.
+            // TODO -64 -> -62
+      .strafeTo(new Vector2d(48, -61.5), new MinVelConstraint(Arrays.asList(new TranslationalVelConstraint(10), new AngularVelConstraint(Math.PI * 2 / 3)))) // TODO 1/3->2/3 do we need ang constraint here?
       .build();
 
-    // SECOND SPECIMEN
-    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -62.25, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(2, -46.5), Math.PI / 2) // was -38 was 38.2
-      .strafeTo(new Vector2d(2, -44.5))  // TODO try to stop arm hitting bar
+    // SPEC2 TO BAR
+    specimenWallPosToBar = drive.actionBuilder(new Pose2d(48, -61.5, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(8, -46.5), Math.PI / 2) // was -38 was 38.2
+      .strafeTo(new Vector2d(8, -41))  // TODO try to stop arm hitting bar
       .build();
 
-    // SECOND SPEC DONE BACK TO WALL
-    barToSpecimenWallPos = drive.actionBuilder(new Pose2d(2, -43.5, Math.PI / 2)) // TODO was -38.2
+    // BACK TO WALL
+    barToSpecimenWallPos = drive.actionBuilder(new Pose2d(8, -41, Math.PI / 2)) // TODO was -38.2
       .setTangent(-Math.PI / 2)
       .splineToSplineHeading(new Pose2d(48, -50, -Math.PI / 2), 0)
-      .strafeTo(new Vector2d(48, -63.5))
+      .strafeTo(new Vector2d(48, -62))
       .build();
 
-    // THIRD SPECIMEN
-    specimenWallPosToBar2 = drive.actionBuilder(new Pose2d(48, -63.5, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(4, -49.5), Math.PI / 2) // TODO -38 -> -40
-      .strafeTo(new Vector2d(4, -47))  // TODO try to stop arm hitting bar
+    // SPEC3 TO BAR
+    specimenWallPosToBar2 = drive.actionBuilder(new Pose2d(48, -62, -Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(6, -49.5), Math.PI / 2) // TODO -38 -> -40
+      .strafeTo(new Vector2d(6, -43.5))  // TODO try to stop arm hitting bar
       .build();
 
-    /*
-    // THIRD SPECIMEN BACK TO WALL
-    barToSpecimenWallPos2 = drive.actionBuilder(new Pose2d(4, -42.5, Math.PI / 2)) // TODO -38.2 -> -40
-      .strafeToSplineHeading(new Vector2d(48, -50), -Math.PI / 2)
-      .strafeTo(new Vector2d(48, -64))
-      .build();
 
-    // 4TH SPECIMEN
-    specimenWallPosToBar3 = drive.actionBuilder(new Pose2d(48, -64, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(6, -38.2), Math.PI / 2) // was 0:-30
-      .build();
-
-    // 4TH DONE BACK TO WALL
-    barToSpecimenWallPos3 = drive.actionBuilder(new Pose2d(6, -36, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(48, -64), -Math.PI / 2) // 40.5,-50
-      .strafeTo(new Vector2d(48, -64))
-      .build();
-
-    specimenWallPosToBar4 = drive.actionBuilder(new Pose2d(40.5, -50, -Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(0, -31), Math.PI / 2)
-      .build();
-*/
-    // 4,-31 -> 6,-36
-    barToParkCorner = drive.actionBuilder(new Pose2d(4, -46.50, Math.PI / 2))
-        .strafeTo(new Vector2d(60, -72))
+    // *** PARK ***
+    barToParkCorner = drive.actionBuilder(new Pose2d(6, -43.5, Math.PI / 2))
+        .strafeTo(new Vector2d(62.5, -62))
         .build();
 
-    rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToSpecimenWallPos3, specimenWallPosToBar4, barToParkCorner};
 
+    //rightSideTrajectories = new Action[] {rightStartToBar, barToObservationZoneAnd3Samples, specimenWallPosToBar, barToSpecimenWallPos, specimenWallPosToBar2, barToSpecimenWallPos2, specimenWallPosToBar3, barToSpecimenWallPos3, specimenWallPosToBar4, barToParkCorner};
+
+    /*
     drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -65, Math.PI / 2));
 
     leftStartToNet = drive.actionBuilder(new Pose2d(-39, -65, Math.PI / 2))
@@ -163,6 +146,8 @@ public class RRPushTrajectories {
       .build();
 
     leftSideTrajectories = new Action[] {leftStartToNet, netToFirstYellowSample, firstYellowSampleToNet, netToSecondYellowSample, secondYellowSampleToNet, netToThirdYellowSampleWall, thirdYellowSampleWallToNet, netToAscentZone};
+
+     */
   }
 
   public Action[] getRightSideTrajectories() {
@@ -171,4 +156,6 @@ public class RRPushTrajectories {
   public Action[] getLeftSideTrajectories() {
     return leftSideTrajectories;
   }
+
+
 }

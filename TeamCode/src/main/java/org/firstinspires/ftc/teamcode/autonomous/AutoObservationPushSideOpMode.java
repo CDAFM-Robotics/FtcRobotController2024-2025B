@@ -23,7 +23,8 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     rrTrajectories = new RRPushTrajectories(this.hardwareMap);
 
     robot.initializeArmDevices();
-    robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO);
+    //robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO);
+    robot.slideExtensionMotor.setPower(1);
     rrTrajectories.initTrajectories();
     trajectories = rrTrajectories.getRightSideTrajectories();
 
@@ -35,14 +36,14 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
-    Actions.runBlocking(trajectories[0]);
+    Actions.runBlocking(rrTrajectories.rightStartToBar);
 
     robot.slideExtensionMotor.setPower(1.0); // TODO FULL SPEED RETRACT ON HANGPULL
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL);
     sleep(550);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    sleep(200);
+    sleep(100);
 
 
     robot.slideExtensionMotor.setTargetPosition(0);
@@ -50,34 +51,40 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
 
-    Actions.runBlocking(trajectories[1]);
+    // TODO GO TO WALL
+    Actions.runBlocking(rrTrajectories.barToObservationZoneAnd3Samples);
+
+
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-    sleep(300);
+    sleep(400);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
     robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO); // TODO revert SLOW Speed FOR WALL PICKUP
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
-    Actions.runBlocking(trajectories[2]);
+    Actions.runBlocking(rrTrajectories.specimenWallPosToBar);
+
+
 
     robot.slideExtensionMotor.setPower(1.0); // TODO FULL SPEED RETRACT
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL); // TODO
     sleep(550);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    sleep(200);
+    sleep(100);
 
     robot.slideExtensionMotor.setTargetPosition(0);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
     robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
 
-    Actions.runBlocking(trajectories[3]);
+    Actions.runBlocking(rrTrajectories.barToSpecimenWallPos);
+
+
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-
     sleep(400);
 
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
@@ -85,14 +92,15 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
-    Actions.runBlocking(trajectories[4]);
+    Actions.runBlocking(rrTrajectories.specimenWallPosToBar2);
+
 
     robot.slideExtensionMotor.setPower(1.0); // TODO: FULL SPEED RETRACT
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG_PULL);
     sleep(550);
 
     robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    sleep(200);
+    sleep(100);
 
     robot.slideExtensionMotor.setTargetPosition(0);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
@@ -100,121 +108,12 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
 
     // PARK AND RE-SET ZEROS
-    Actions.runBlocking(trajectories[9]);
+    Actions.runBlocking(rrTrajectories.barToParkCorner);
 
     robot.slideRotationMotor.setTargetPosition(0);
 
     sleep(5000);
 
-/*
-
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    robot.slideRotationMotor.setPower(0.5);
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP);
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_PICKUP);
-    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP);
-    robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_AUTO_PICKUP);
-
-    while (Math.abs(robot.slideExtensionMotor.getCurrentPosition() - robot.slideExtensionMotor.getTargetPosition()) > 10 || Math.abs(robot.slideRotationMotor.getCurrentPosition() - robot.slideRotationMotor.getTargetPosition()) > 10) {
-      continue;
-    }
-    pickUpSampleAuto();
-
-    sleep(250);
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP + 350);
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_DROP_OBSERVE);
-
-    sleep(100);
-
-    Actions.runBlocking(trajectories[2]);
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-
-    sleep(250);
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL);
-    robot.slideExtensionMotor.setTargetPosition(0);
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP_WALL);
-    robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
-
-    sleep(5000);
-
-    Actions.runBlocking(trajectories[7]);
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_CLOSED);
-
-    sleep(500);
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP_WALL + 200);
-
-    sleep(500);
-
-    robot.slideRotationMotor.setPower(1);
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
-    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
-
-    Actions.runBlocking(trajectories[8]);
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG - 500);
-    while (Math.abs(robot.slideRotationMotor.getCurrentPosition() - robot.slideRotationMotor.getTargetPosition()) > 5) {
-      robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG - 500);
-    }
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
-    robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG - 300);
-    robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_STRAIGHT);
-
-    sleep(1000);
-
-    robot.slideRotationMotor.setTargetPosition(1200);
-
-    Actions.runBlocking(trajectories[13]);
-
-    robot.slideRotationMotor.setPower(0.5);
-    robot.slideRotationMotor.setTargetPosition(0);
-    robot.slideExtensionMotor.setTargetPosition(0);
-
-    sleep(1000);
-
-    /*
-
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP + 200);
-
-    Actions.runBlocking(trajectories[3]);
-
-    pickUpSampleAuto();
-
-    Actions.runBlocking(trajectories[4]);
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-
-    Actions.runBlocking(trajectories[5]);
-
-    pickUpSampleAuto();
-
-    Actions.runBlocking(trajectories[6]);
-
-    robot.setClawGrabServoPosition(Robot.CLAW_GRAB_POSITION_OPEN);
-
-    Actions.runBlocking(trajectories[7]);
-    Actions.runBlocking(trajectories[8]);
-    Actions.runBlocking(trajectories[9]);
-    Actions.runBlocking(trajectories[10]);
-    Actions.runBlocking(trajectories[11]);
-    Actions.runBlocking(trajectories[12]);
-    Actions.runBlocking(trajectories[13]);
-
-    robot.slideExtensionMotor.setTargetPosition(0);
-    robot.slideRotationMotor.setTargetPosition(0);
-
-
-     */
 
 
   }
