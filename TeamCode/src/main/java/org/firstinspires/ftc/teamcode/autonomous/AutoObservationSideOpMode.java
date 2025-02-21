@@ -4,6 +4,7 @@ import com.acmerobotics.roadrunner.Action;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.common.RRTrajectories;
@@ -11,6 +12,7 @@ import org.firstinspires.ftc.teamcode.common.Robot;
 import org.firstinspires.ftc.teamcode.roadrunner.MecanumDrive;
 
 @Autonomous(name = "Observation Zone Autonomous", group = "0Competition")
+@Disabled
 public class AutoObservationSideOpMode extends LinearOpMode {
 
   RRTrajectories rrTrajectories;
@@ -57,7 +59,7 @@ public class AutoObservationSideOpMode extends LinearOpMode {
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP);
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_PICKUP);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP);
-    robot.setClawRotateServoPosition(Robot.CLAW_ROTATE_POSITION_AUTO_PICKUP);
+    robot.setClawRotateServoPosition(0);
 
     while (Math.abs(robot.slideExtensionMotor.getCurrentPosition() - robot.slideExtensionMotor.getTargetPosition()) > 10 || Math.abs(robot.slideRotationMotor.getCurrentPosition() - robot.slideRotationMotor.getTargetPosition()) > 10) {
       continue;

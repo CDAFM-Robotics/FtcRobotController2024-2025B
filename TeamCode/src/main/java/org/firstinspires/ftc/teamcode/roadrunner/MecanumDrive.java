@@ -63,32 +63,32 @@ public final class MecanumDrive {
                 RevHubOrientationOnRobot.UsbFacingDirection.LEFT;
 
         // drive model parameters
-        public double inPerTick = 0.00298691668265565932555836155174; // SMOOTH: 32133.5/96 32087.5/96 32199.5/96
-        public double lateralInPerTick = 0.0021903025094491325;
-        public double trackWidthTicks = 4157.606109362922;
+        public double inPerTick = 0.00294240505271600193821116476466; // SMOOTH: 32133.5/96 32087.5/96 32199.5/96
+        public double lateralInPerTick = 0.0021851514944720143;
+        public double trackWidthTicks = 4236.479833951254;
 
         // feedforward parameters (in tick units)
-        public double kS = 0.7977478676553336;
-        public double kV = 0.0005787917651261725;
-        public double kA = 0.00009;
+        public double kS = 0.8368494534594975;
+        public double kV = 0.0005788598413101466;
+        public double kA = 0;
 
         // path profile parameters (in inches)
-        public double maxWheelVel = 50;
-        public double minProfileAccel = -30;
-        public double maxProfileAccel = 50;
+        public double maxWheelVel = 55; // TODO JW -50
+        public double minProfileAccel = -30; // TODO JW -15
+        public double maxProfileAccel = 55; // TODO JW -50
 
         // turn profile parameters (in radians)
         public double maxAngVel = Math.PI; // shared with path
         public double maxAngAccel = Math.PI;
 
         // path controller gains
-        public double axialGain = 5.0;
-        public double lateralGain = 2.0;
-        public double headingGain = 10.0; // shared with turn
+        public double axialGain = 10;
+        public double lateralGain = 5;
+        public double headingGain = 10; // shared with turn
 
-        public double axialVelGain = 0.5;
-        public double lateralVelGain = 0.2;
-        public double headingVelGain = 1.0; // shared with turn
+        public double axialVelGain = 1;
+        public double lateralVelGain = 0;
+        public double headingVelGain = 0.1; // shared with turn
     }
 
     public static Params PARAMS = new Params();

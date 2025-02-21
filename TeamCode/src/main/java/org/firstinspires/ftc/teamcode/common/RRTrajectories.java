@@ -43,7 +43,6 @@ public class RRTrajectories {
   public Action secondYellowSampleToNet;
   public Action netToThirdYellowSampleWall;
   public Action thirdYellowSampleWallToNet;
-  public Action netToAscentZone;
 
   public Action[] leftSideTrajectories;
 
@@ -120,40 +119,34 @@ public class RRTrajectories {
     drive = new MecanumDrive(myHardwareMap, new Pose2d(-39, -65, Math.PI / 2));
 
     leftStartToNet = drive.actionBuilder(new Pose2d(-39, -65, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+      .strafeToSplineHeading(new Vector2d(-62, -49.5), Math.PI / 2)
       .build();
 
-    netToFirstYellowSample = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0/4.0)))
-        .strafeToSplineHeading(new Vector2d(-48, -35), Math.PI / 2)
-        .build();
-
-    firstYellowSampleToNet = drive.actionBuilder(new Pose2d(-48, -35, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+    netToFirstYellowSample = drive.actionBuilder(new Pose2d(-62, -49.5, Math.PI /2))
+      .strafeToSplineHeading(new Vector2d(-46, -49.5), Math.PI / 2)
       .build();
 
-    netToSecondYellowSample = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
-      .strafeToSplineHeading(new Vector2d(-60, -35), Math.PI / 2)
+    firstYellowSampleToNet = drive.actionBuilder(new Pose2d(-46, -49.5, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-62, -49.5), Math.PI / 2)
       .build();
 
-    secondYellowSampleToNet = drive.actionBuilder(new Pose2d(-60, -35, Math.PI / 2))
-      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+    netToSecondYellowSample = drive.actionBuilder(new Pose2d(-62, -49.5, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-56.5, -49.5), Math.PI / 2)
       .build();
 
-    netToThirdYellowSampleWall = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
-      .strafeToSplineHeading(new Vector2d(-60, -26), Math.PI)
+    secondYellowSampleToNet = drive.actionBuilder(new Pose2d(-56.5, -49.5, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-62, -49.5), Math.PI / 2)
       .build();
 
-    thirdYellowSampleWallToNet = drive.actionBuilder(new Pose2d(-60, -26, Math.PI))
-      .strafeToSplineHeading(new Vector2d(-54, -54), -Math.PI * (3.0 / 4.0))
+    netToThirdYellowSampleWall = drive.actionBuilder(new Pose2d(-62, -49.5, Math.PI / 2))
+      .strafeToSplineHeading(new Vector2d(-60, -25.75), Math.PI)
       .build();
 
-    netToAscentZone = drive.actionBuilder(new Pose2d(-54, -54, -Math.PI * (3.0 / 4.0)))
-      .setTangent(Math.PI / 2)
-      .splineToSplineHeading(new Pose2d(-54, -12, 0), Math.PI / 2)
-      .splineToConstantHeading(new Vector2d(-24, 0), 0)
+    thirdYellowSampleWallToNet = drive.actionBuilder(new Pose2d(-60, -25.75, Math.PI))
+      .strafeToSplineHeading(new Vector2d(-62, -49.5), Math.PI / 2)
       .build();
 
-    leftSideTrajectories = new Action[] {leftStartToNet, netToFirstYellowSample, firstYellowSampleToNet, netToSecondYellowSample, secondYellowSampleToNet, netToThirdYellowSampleWall, thirdYellowSampleWallToNet, netToAscentZone};
+    leftSideTrajectories = new Action[] {leftStartToNet, netToFirstYellowSample, firstYellowSampleToNet, netToSecondYellowSample, secondYellowSampleToNet, netToThirdYellowSampleWall, thirdYellowSampleWallToNet};
   }
 
   public Action[] getRightSideTrajectories() {
