@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -71,7 +72,7 @@ public class DriverControlledOpMode extends LinearOpMode {
 
       telemetry.addData("Status", "Running");
       // Update the gamepads.
-      // Using previousGamepad and currentGampad to detect one button push.
+      // Using previousGamepad and currentGamepad to detect one button push.
       previousGamepad1.copy(currentGamepad1);
       currentGamepad1.copy(gamepad1);
       previousGamepad2.copy(currentGamepad2);
@@ -87,60 +88,23 @@ public class DriverControlledOpMode extends LinearOpMode {
       /*************************
        *  Driver Arm Control   *
        *************************/
-      if (currentGamepad2.left_stick_y < 0) {
-        robot.setArmRotationMotorPower(Math.pow(currentGamepad2.left_stick_y,2));
-        robot.setArmRotationMotorTargetPosition(robot.ARM_ROT_DROP_OFF_SAMPLES);
-      }
-      else if (currentGamepad2.left_stick_y > 0) {
-        robot.setArmRotationMotorPower(Math.pow(currentGamepad2.left_stick_y,2));
-        robot.setArmRotationMotorTargetPosition(robot.ARM_ROT_INIT);
-      }
-      else {
-        if (currentGamepad2.left_stick_y == 0 && previousGamepad2.left_stick_y != 0 ) {
-          robot.setArmRotationMotorPower(1.0);
-          robot.setArmRotationMotorTargetPosition(robot.getSlideExtensionMotorCurrentPosition());
-        }
-      }
 
-      if (currentGamepad2.right_stick_y < 0) {
-        robot.setSlideExtensionMotorPower(currentGamepad2.right_stick_y * Math.pow(currentGamepad2.right_stick_y,2));
-        robot.setSlideExtMotorTargetPos(Robot.ARM_EXT_DROP_TOP_BASKET);
-      }
-      else if (currentGamepad2.right_stick_y > 0){
-        robot.setSlideExtensionMotorPower(currentGamepad2.right_stick_y * Math.pow(currentGamepad2.right_stick_y,2));
-        robot.setSlideExtMotorTargetPos(Robot.ARM_EXT_INIT);
-      }
-      else {
-        if (currentGamepad2.left_stick_y == 0 && previousGamepad2.left_stick_y != 0 ) {
-          robot.setSlideExtensionMotorPower(1.0);
-          robot.setSlideExtMotorTargetPos(robot.getSlideExtensionMotorCurrentPosition());
-        }
-      }
 
       // Toggle the finger position
       if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
         robot.toggleClawGrabPosition();
       }
+      telemetry.addData("claw position", robot.clawGrabServo.getPosition());
 
-      // Wrist joint move up 0
-      if (currentGamepad2.b && !previousGamepad2.b) {
-        robot.clawPanServoUp();
+      if(currentGamepad2.a && !previousGamepad2.a){
+        robot.armRotationMotor.setPower(1);
+        robot.armRotationMotor.setTargetPosition(robot.armRotationMotor.getTargetPosition() + 50);
       }
-
-      // Wrist joint move down
-      if (currentGamepad2.a && !previousGamepad2.a) {
-        robot.clawPanServoDown();
+      if(currentGamepad2.x && !previousGamepad2.x){
+        robot.armRotationMotor.setPower(1);
+        robot.armRotationMotor.setTargetPosition(robot.armRotationMotor.getTargetPosition() - 50);
       }
-      // Wrist joint rotate left
-      if (currentGamepad2.x && !previousGamepad2.x) {
-        robot.clawRotateServoLeft();
-      }
-
-      // Wrist joint rotate right
-      if (currentGamepad2.y && !previousGamepad2.y) {
-        robot.clawRotateServoRight();
-      }
-
+      telemetry.addData("arm rotation motor", robot.armRotationMotor.getTargetPosition());
 
 
       // Driver Arm Rotation Control
@@ -424,9 +388,7 @@ public class DriverControlledOpMode extends LinearOpMode {
       telemetry.addData("Rotation Motor ", "power: %f, p per cycle: %d", robot.slideRotationMotor.getPower(), tickPerCycle);
       telemetry.addData("Extension Motor ", "Target: %s, Current: %d", robot.getSlideExtensionMotorTargetPosition(), robot.getSlideExtensionMotorCurrentPosition());
       telemetry.addData("Extension Motor ", "power: %f", robot.slideExtensionMotor.getPower());*/
-      telemetry.addData("Fingers servo ", "position %f", robot.clawGrabServo.getPosition());
-      telemetry.addData("pan servo ", "position %f", robot.clawPanServo.getPosition());
-      telemetry.addData("rotation servo ", "position %f", robot.clawRotateServo.getPosition());
+
       telemetry.addLine(armHandState.toString());
 
       telemetry.update();

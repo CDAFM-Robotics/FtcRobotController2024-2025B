@@ -93,7 +93,7 @@ public class Robot {
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 200;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 20;
   public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
   public static int ARM_ROT_PICKUP_SAMPLES = 286;
@@ -194,9 +194,7 @@ public class Robot {
     armRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     armRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     armRotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    armRotationMotor.setTargetPosition(ARM_ROT_INIT);
     armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    armRotationMotor.setPower(ARM_ROT_POWER_FULL);
 
 
     slideExtensionMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -204,14 +202,12 @@ public class Robot {
     slideExtensionMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     slideExtensionMotorRight.setTargetPosition(ARM_EXT_INIT);
     slideExtensionMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideExtensionMotorRight.setPower(1);
 
     slideExtensionMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
     slideExtensionMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     slideExtensionMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
     slideExtensionMotorLeft.setTargetPosition(ARM_EXT_INIT);
     slideExtensionMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideExtensionMotorLeft.setPower(1);
 
     clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
     clawPanServo.setPosition(CLAW_PAN_TELEOP_INIT);
