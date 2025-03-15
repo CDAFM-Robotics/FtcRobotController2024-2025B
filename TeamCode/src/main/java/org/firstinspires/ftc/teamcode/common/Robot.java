@@ -5,6 +5,8 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import java.util.Set;
+
 public class Robot {
 
   // Motors and devices
@@ -14,8 +16,9 @@ public class Robot {
   public DcMotor backLeftMotor = null;
   public DcMotor backRightMotor = null;
 
-  public DcMotor slideExtensionMotor = null;
-  public DcMotor slideRotationMotor = null;
+  public DcMotor slideExtensionMotorRight = null;
+  public DcMotor slideExtensionMotorLeft = null;
+  public DcMotor armRotationMotor = null;
 
   public Servo clawGrabServo = null;
   public Servo clawPanServo = null;
@@ -32,7 +35,7 @@ public class Robot {
   public static double CLAW_ROTATE_POSITION_AUTO_PICKUP = 0.65;
   public static double CLAW_ROTATE_POSITION_RIGHT = 0.8375;
 
-  public static double CLAW_PAN_TELEOP_INIT = 0.65;
+  public static double CLAW_PAN_TELEOP_INIT = 0.5;
   public static double CLAW_PAN_POSITION_DROP_DIP = 0.6; // don't retract slide with this position!!!
   public static double CLAW_PAN_POSITION_STRAIGHT = 0.225;
   public static double CLAW_PAN_POSITION_PICKUP_DIP = 0.135;          ;
@@ -51,6 +54,7 @@ public class Robot {
   public static double CLAW_ROTATE_SPEED = 0.100;
   public static double CLAW_ROTATE_MAX = 0.8125;
   public static double CLAW_ROTATE_MIN = 0.1825;
+  public static double CLAW_ROTATE_POSITION_INIT = 0.0;
 
   // Extension constants with 117 RPM motor
 //  public static int ARM_EXT_INIT = 0;
@@ -70,7 +74,8 @@ public class Robot {
 
   // Extension constants with 312 RPM motor
   public static int ARM_EXT_INIT = 0;
-  public static int ARM_EXT_DROP_TOP_BASKET = 3060;
+  public static int ARM_EXT_UP_A_LITTLE = 100;
+  public static int ARM_EXT_DROP_TOP_BASKET = 2000; //TODO: test and tune
   public static int ARM_EXT_DROP_BOTTOM_BASKET = 1024;
   public static int ARM_EXT_HANG_TOP_SPECIMEN = 628;
   public static int ARM_EXT_HANG_TOP_SPECIMEN_PULL = 28;
@@ -88,7 +93,7 @@ public class Robot {
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 1560;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = 200;
   public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
   public static int ARM_ROT_PICKUP_SAMPLES = 286;
@@ -105,7 +110,7 @@ public class Robot {
   public static double ARM_ROT_POWER_FULL = 1.0;
   public static double ARM_EXT_POWER = 1.0;
   public static double ARM_EXT_POWER_AUTO = 0.38;
-  public static double DRIVE_TRAIN_SPEED_FAST = 0.75;
+  public static double DRIVE_TRAIN_SPEED_FAST = 1.0;
   public static double DRIVE_TRAIN_SPEED_SLOW = 1.0 / 3.0;
 
   public static double LENGTH_CLAW = 7;
@@ -178,31 +183,40 @@ public class Robot {
   }
 
   public void initializeArmDevices() {
-    slideExtensionMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotor");
-    slideRotationMotor = myOpMode.hardwareMap.get(DcMotor.class, "slideRotationMotor");
+    slideExtensionMotorRight = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotorRight");
+    slideExtensionMotorLeft = myOpMode.hardwareMap.get(DcMotor.class, "slideExtensionMotorLeft");
+    armRotationMotor = myOpMode.hardwareMap.get(DcMotor.class, "armRotationMotor");
 
     clawGrabServo = myOpMode.hardwareMap.get(Servo.class, "clawGrabServo");
     clawPanServo = myOpMode.hardwareMap.get(Servo.class, "clawPanServo");
     clawRotateServo = myOpMode.hardwareMap.get(Servo.class, "clawRotateServo");
 
-    slideRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    slideRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    slideRotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    slideRotationMotor.setTargetPosition(ARM_ROT_INIT);
-    slideRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideRotationMotor.setPower(ARM_ROT_POWER_FULL);
+    armRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
+    armRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    armRotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    armRotationMotor.setTargetPosition(ARM_ROT_INIT);
+    armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    armRotationMotor.setPower(ARM_ROT_POWER_FULL);
 
 
-    slideExtensionMotor.setDirection(DcMotorSimple.Direction.REVERSE);
-    slideExtensionMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-    slideExtensionMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-    slideExtensionMotor.setTargetPosition(ARM_EXT_INIT);
-    slideExtensionMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-    slideExtensionMotor.setPower(1);
+    slideExtensionMotorRight.setDirection(DcMotorSimple.Direction.REVERSE);
+    slideExtensionMotorRight.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideExtensionMotorRight.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    slideExtensionMotorRight.setTargetPosition(ARM_EXT_INIT);
+    slideExtensionMotorRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideExtensionMotorRight.setPower(1);
 
-    clawPanServo.setPosition(CLAW_PAN_TELEOP_INIT);
-    clawRotateServo.setPosition(CLAW_ROTATE_POSITION_STRAIGHT);
+    slideExtensionMotorLeft.setDirection(DcMotorSimple.Direction.REVERSE);
+    slideExtensionMotorLeft.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+    slideExtensionMotorLeft.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    slideExtensionMotorLeft.setTargetPosition(ARM_EXT_INIT);
+    slideExtensionMotorLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+    slideExtensionMotorLeft.setPower(1);
+
     clawGrabServo.setPosition(CLAW_GRAB_POSITION_CLOSED);
+    clawPanServo.setPosition(CLAW_PAN_TELEOP_INIT);
+    clawRotateServo.setPosition(CLAW_ROTATE_POSITION_INIT);
+
   }
 
   public void setMotorPowers(double x, double y, double rx, double heading, double speed) {
@@ -257,7 +271,69 @@ public class Robot {
     return driveSpeed;
   }
 
+  // Set Slide Extension Motor power
+  public void setSlideExtensionMotorPower(double power) {
+    slideExtensionMotorRight.setPower(power);
+    slideExtensionMotorLeft.setPower(power);
+
+  }
+
+  public void setSlideExtMotorTargetPos(int position) {
+    slideExtensionMotorRight.setTargetPosition(position);
+    slideExtensionMotorLeft.setTargetPosition(position);
+  }
+
+  // Get Slide Extension Motor Target position
+  public int getSlideExtensionMotorTargetPosition() {
+    return slideExtensionMotorRight.getTargetPosition();
+  }
+
+  // Get Slide Extension Motor Target position
+  public int getSlideExtensionMotorCurrentPosition() {
+    return slideExtensionMotorRight.getCurrentPosition();
+  }
+  // Toggle Finger position
+  public void toggleClawGrabPosition() {
+    clawGrabPosition = clawGrabServo.getPosition() == CLAW_GRAB_POSITION_CLOSED ? CLAW_GRAB_POSITION_OPEN : CLAW_GRAB_POSITION_CLOSED;
+  }
+
+  // Move claw wrist up
+  public void clawPanServoUp() {
+    clawPanPosition = (clawPanServo.getPosition() + CLAW_PAN_SPEED) > 1 ? 1 : (clawPanServo.getPosition() + CLAW_PAN_SPEED);
+  }
+
+  // Move claw wrist down
+  public void clawPanServoDown() {
+    clawPanPosition = (clawPanServo.getPosition() - CLAW_PAN_SPEED) < 0 ? 0 : (clawPanServo.getPosition() - CLAW_PAN_SPEED);
+  }
+
+  // Move claw wrist up
+  public void clawRotateServoLeft() {
+    clawRotatePosition = (clawRotateServo.getPosition() + CLAW_ROTATE_SPEED) > CLAW_ROTATE_MAX ? CLAW_ROTATE_MAX : (clawRotateServo.getPosition() + CLAW_PAN_SPEED);
+  }
+
+  // Move claw wrist down
+  public void clawRotateServoRight() {
+    clawRotatePosition = (clawRotateServo.getPosition() - CLAW_ROTATE_SPEED) < CLAW_ROTATE_MIN ? CLAW_ROTATE_MIN : (clawRotateServo.getPosition() - CLAW_PAN_SPEED);
+  }
+
   // Set Slide Rotation Motor power
+  public void setArmRotationMotorPower(double power) {
+    armRotationMotor.setPower(power);
+  }
+
+  // Set Slide Rotation Motor position
+  public void setArmRotationMotorTargetPosition(int position) {
+    armRotationMotor.setTargetPosition(position);
+  }
+
+  // Get Slide Rotation Motor Target position
+  public int getSlideRotationMotorTargetPosition() {
+
+    return armRotationMotor.getTargetPosition();
+  }
+
+  /*// Set Slide Rotation Motor power
   public void setSlideRotationMotorPower(double power) {
     slideRotationMotor.setPower(power);
   }
@@ -571,7 +647,7 @@ public class Robot {
     double a = (105.0/1661.0);
     double rotationOffSet = a * slideExtensionMotor.getCurrentPosition();
     slideRotationTargetPosition = (int)(rotationOffSet) + ARM_ROT_PICKUP_SAMPLES;
-  }
+  }*/
 
 }
 

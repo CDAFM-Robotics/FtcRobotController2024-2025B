@@ -24,7 +24,7 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
 
     robot.initializeArmDevices();
     //robot.slideExtensionMotor.setPower(Robot.ARM_EXT_POWER_AUTO);
-    robot.slideExtensionMotor.setPower(1);
+/*    robot.slideExtensionMotor.setPower(1);
     rrTrajectories.initTrajectories();
     trajectories = rrTrajectories.getRightSideTrajectories();
 
@@ -130,7 +130,7 @@ public class AutoObservationPushSideOpMode extends LinearOpMode {
 
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
 
-    sleep(250);
+    sleep(250);*/
 
   }
 }

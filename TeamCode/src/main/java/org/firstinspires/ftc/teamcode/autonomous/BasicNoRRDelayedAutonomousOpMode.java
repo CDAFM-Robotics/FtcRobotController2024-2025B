@@ -16,7 +16,7 @@ public class BasicNoRRDelayedAutonomousOpMode extends LinearOpMode {
   public void runOpMode() {
     robot.initializeDevices();
     waitForStart();
-    robot.slideRotationMotor.setTargetPosition(350);
+/*    robot.slideRotationMotor.setTargetPosition(350);
     sleep(13000);
     elapsedTime.reset();
     while (opModeIsActive() && elapsedTime.milliseconds() < 500) {
@@ -64,6 +64,6 @@ public class BasicNoRRDelayedAutonomousOpMode extends LinearOpMode {
     }
     while (opModeIsActive() && elapsedTime.milliseconds() < 2500) {
       robot.setMotorPowers(1, 0, 0, 0, 0.5);
-    }
+    }*/
   }
 }

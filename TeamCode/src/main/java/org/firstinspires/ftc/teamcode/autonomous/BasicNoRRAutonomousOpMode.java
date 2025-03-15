@@ -17,7 +17,7 @@ public class BasicNoRRAutonomousOpMode extends LinearOpMode {
     robot.initializeDevices();
     waitForStart();
     elapsedTime.reset();
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_DRIVE);
+/*    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_DRIVE);
     while (opModeIsActive() && elapsedTime.milliseconds() < 5000) {
       robot.setMotorPowers(0, -1, 0, 0, 0.2);
     }
@@ -58,6 +58,6 @@ public class BasicNoRRAutonomousOpMode extends LinearOpMode {
     }
     while (opModeIsActive() && elapsedTime.milliseconds() < 2500) {
       robot.setMotorPowers(1, 0, 0, 0, 0.5);
-    }
+    }*/
   }
 }

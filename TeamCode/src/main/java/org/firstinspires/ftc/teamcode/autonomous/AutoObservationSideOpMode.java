@@ -32,7 +32,7 @@ public class AutoObservationSideOpMode extends LinearOpMode {
 
     waitForStart();
 
-    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
+/*    robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_HANG);
     robot.slideExtensionMotor.setTargetPosition(Robot.ARM_EXT_AUTO_HANG);
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_HANG);
 
@@ -165,7 +165,7 @@ public class AutoObservationSideOpMode extends LinearOpMode {
   }
 
   public void pickUpSampleAuto() {
-    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP);
+/*    robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_AUTO_PICKUP);
     robot.slideRotationMotor.setTargetPosition(Robot.ARM_ROT_AUTO_PICKUP);
 
     sleep(250);
@@ -176,7 +176,7 @@ public class AutoObservationSideOpMode extends LinearOpMode {
 
     robot.setClawPanServoPosition(Robot.CLAW_PAN_POSITION_DRIVE);
 
-    sleep(250);
+    sleep(250);*/
 
   }
 }
