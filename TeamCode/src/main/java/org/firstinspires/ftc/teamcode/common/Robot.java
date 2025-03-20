@@ -93,10 +93,10 @@ public class Robot {
   public static int ARM_EXT_AUTO_DROP_TOP_BASKET = 3060;
 
   public static int ARM_ROT_INIT = 0;
-  public static int ARM_ROT_DROP_OFF_SAMPLES = 20;
+  public static int ARM_ROT_DROP_OFF_SAMPLES = -400;
   public static int ARM_ROT_DROP_OFF_SAMPLES_BOTTOM = 1525;
   public static int ARM_ROT_HANG_TOP_SPECIMEN = 1202;
-  public static int ARM_ROT_PICKUP_SAMPLES = 286;
+  public static int ARM_ROT_PICKUP_POSITION = -800;
   public static int ARM_ROT_PICKUP_WALL = 297;
   public static int ARM_ROT_AUTO_PICKUP_WALL = 200;
   public static int ARM_ROT_DRIVE = 547;
@@ -194,6 +194,8 @@ public class Robot {
     armRotationMotor.setDirection(DcMotorSimple.Direction.REVERSE);
     armRotationMotor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     armRotationMotor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+    armRotationMotor.setTargetPosition(0);
+    armRotationMotor.setPower(0.125);
     armRotationMotor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
 
@@ -288,6 +290,10 @@ public class Robot {
   public int getSlideExtensionMotorCurrentPosition() {
     return slideExtensionMotorRight.getCurrentPosition();
   }
+
+  //arm rotation macro
+
+
   // Toggle Finger position
   public void toggleClawGrabPosition() {
     clawGrabPosition = clawGrabServo.getPosition() == CLAW_GRAB_POSITION_CLOSED ? CLAW_GRAB_POSITION_OPEN : CLAW_GRAB_POSITION_CLOSED;

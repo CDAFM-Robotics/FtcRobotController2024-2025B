@@ -90,22 +90,29 @@ public class DriverControlledOpMode extends LinearOpMode {
        *************************/
 
 
-      // Toggle the finger position
+      // pickup macro
       if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
         robot.toggleClawGrabPosition();
       }
+      if(currentGamepad2.right_trigger >= 0.8 && previousGamepad2.right_trigger < 0.8){
+        if(robot.armRotationMotor.getTargetPosition() == Robot.ARM_ROT_PICKUP_POSITION){
+          robot.armRotationMotor.setTargetPosition(Robot.ARM_ROT_INIT);
+        } else if(robot.armRotationMotor.getTargetPosition() != Robot.ARM_ROT_PICKUP_POSITION){
+          robot.armRotationMotor.setTargetPosition(Robot.ARM_ROT_PICKUP_POSITION);
+        }
+      }
       telemetry.addData("claw position", robot.clawGrabServo.getPosition());
 
-      if(currentGamepad2.a && !previousGamepad2.a){
-        robot.armRotationMotor.setPower(1);
-        robot.armRotationMotor.setTargetPosition(robot.armRotationMotor.getTargetPosition() + 50);
+      if(currentGamepad2.dpad_up && !previousGamepad2.dpad_up){
+        if(robot.armRotationMotor.getTargetPosition() == Robot.ARM_ROT_DROP_OFF_SAMPLES){
+          robot.armRotationMotor.setTargetPosition(Robot.ARM_ROT_INIT);
+        } else if(robot.armRotationMotor.getTargetPosition() != Robot.ARM_ROT_DROP_OFF_SAMPLES){
+          robot.armRotationMotor.setTargetPosition(Robot.ARM_ROT_DROP_OFF_SAMPLES);
+        }
       }
-      if(currentGamepad2.x && !previousGamepad2.x){
-        robot.armRotationMotor.setPower(1);
-        robot.armRotationMotor.setTargetPosition(robot.armRotationMotor.getTargetPosition() - 50);
-      }
-      telemetry.addData("arm rotation motor", robot.armRotationMotor.getTargetPosition());
 
+      telemetry.addData("arm rotation motor", robot.armRotationMotor.getTargetPosition());
+      telemetry.addData("arm rotation motor current", robot.armRotationMotor.getCurrentPosition());
 
       // Driver Arm Rotation Control
 /*      if (currentGamepad2.left_stick_y < 0) {
